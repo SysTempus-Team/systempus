@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tela01/page01.dart';
+
 import 'package:flutter/widgets.dart';
+
+import 'package:tela01/page03.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,7 +13,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: RootPage(),
@@ -27,7 +28,7 @@ class RootPage extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPage> {
-  List<Widget> pages = const [Page01()];
+  List<Widget> pages = const [Page03()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +37,7 @@ class _RootPageState extends State<RootPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: Page01(),
+      body: Page03(),
     );
   }
 }
