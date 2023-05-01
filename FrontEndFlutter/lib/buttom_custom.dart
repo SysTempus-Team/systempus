@@ -21,17 +21,19 @@ class _ButtomCustomState extends State<ButtomCustom> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        width: 110.0,
-        height: 70.00,
-        child: ElevatedButton(
-            onPressed: widget.onPressed,
-            style: ElevatedButton.styleFrom(
-              foregroundColor: widget.textColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              backgroundColor: widget.color,
-            ),
-            child: Text(widget.label)));
+      width: 110.0,
+      height: 70.00,
+      child: ElevatedButton(
+        onPressed: widget.onPressed,
+        style: ElevatedButton.styleFrom(
+          foregroundColor: widget.textColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          backgroundColor: widget.color,
+        ),
+        child: Text(widget.label),
+      ),
+    );
   }
 }

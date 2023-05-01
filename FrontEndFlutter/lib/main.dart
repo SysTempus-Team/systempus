@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 import 'package:tela01/page03.dart';
+import 'disciplina/home_disciplina.dart';
+import 'home_disciplina_mobile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,13 +33,18 @@ class _RootPageState extends State<RootPage> {
   List<Widget> pages = const [Page03()];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 24.0,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Page03(),
+    if (MediaQuery.of(context).size.width < 400) {
+      return MaterialApp(
+        theme: ThemeData.light(),
+        title: 'Disciplina',
+        home: const HomeDisciplinaMobile(),
+      );
+    }
+
+    return MaterialApp(
+      theme: ThemeData.light(),
+      title: 'Disciplina',
+      home: const HomeDisciplina(),
     );
   }
 }
