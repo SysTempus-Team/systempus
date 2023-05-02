@@ -14,6 +14,9 @@
 * Docker
 * Publicação na Google Play e App Store
 * Integração Cloud
+
+
+marinadesouzamartins0@gmail.com
   
 
 
