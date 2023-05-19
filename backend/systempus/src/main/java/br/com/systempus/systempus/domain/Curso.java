@@ -115,5 +115,12 @@ public class Curso {
         return modulos;
     }
 
+    @Override
+    public String toString() {
+        return "Curso [id=" + id + ", nome=" + nome + ", nivelEnsino=" + nivelEnsino + ", qtdPeriodos=" + qtdPeriodos
+                + ", modalidade=" + modalidade + ", cargaTotal=" + cargaTotal + ", modulos=" + modulos
+                + ", coordenador=" + coordenador + "]";
+    }
 
+    
 }

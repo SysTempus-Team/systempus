@@ -1,5 +1,7 @@
 package br.com.systempus.systempus.domain.enumerador;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum Modalidade {
 
     PRESENCIAL(0, "Presencial"),
@@ -17,7 +19,8 @@ public enum Modalidade {
     public Integer getValue(){
         return value;
     }
-
+    
+    @JsonValue
     public String getName(){
         return name;
     }

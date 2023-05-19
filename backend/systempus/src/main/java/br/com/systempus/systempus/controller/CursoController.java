@@ -41,7 +41,13 @@ public class CursoController {
 
     @PostMapping
     public ResponseEntity<Curso> post(@Valid @RequestBody Curso curso, UriComponentsBuilder uriBuilder) {
+
+        System.out.println("Indo... "+curso);
+
         Curso novoCurso = cursoService.insert(curso);
+
+        System.out.println("Voltando... "+curso);
+
         URI uri = uriBuilder.path("api/v1/curso").buildAndExpand().toUri();
         return ResponseEntity.created(uri).body(novoCurso);
     }

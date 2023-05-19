@@ -20,6 +20,10 @@ public class Coordenador extends Profissional{
     @OneToMany
     private List<Curso> cursos;
 
+    public void setId(Integer id){
+        this.id = id;
+    }
+
     public Integer getId(){
         return id;
     }
