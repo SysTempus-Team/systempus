@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,10 +18,10 @@ import java.util.List;
 import java.util.Map;
 
 import br.com.systempus.systempus.domain.Coordenador;
-import br.com.systempus.systempus.services.CoordenadorService;
-import br.com.systempus.systempus.services.ICoordenadorService;
+import br.com.systempus.systempus.services.interfaces.ICoordenadorService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/coordenador")
@@ -42,13 +41,13 @@ public class CoordenadorController {
     }
 
     @PostMapping
-    public ResponseEntity<Coordenador> save(@RequestBody Coordenador coordenador, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
-        coordenadorService.insert(coordenador);
+    public ResponseEntity<Coordenador> save(@Valid @RequestBody Coordenador coordenador, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        coordenadorService.save(coordenador);
 
         StringBuffer path = new StringBuffer();
         path.append(request.getRequestURI())
-        .append("/")
-        .append(coordenador.getId());
+            .append("/")
+            .append(coordenador.getId());
 
         URI uri = new URI(path.toString());
         return ResponseEntity.created(uri).body(coordenador);

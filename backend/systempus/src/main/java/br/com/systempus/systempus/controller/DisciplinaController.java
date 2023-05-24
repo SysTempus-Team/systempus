@@ -1,6 +1,7 @@
 package br.com.systempus.systempus.controller;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,20 +16,21 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.systempus.systempus.domain.Disciplina;
 import br.com.systempus.systempus.services.DisciplinaService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "api/v1/disciplina")
+@RequestMapping("api/v1/disciplina")
 public class DisciplinaController {
 
     @Autowired
     private DisciplinaService service;
 
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Disciplina> getOne(@PathVariable Integer id){
         return ResponseEntity.ok().body(service.getOne(id));
     }
@@ -39,27 +41,36 @@ public class DisciplinaController {
     }
 
     @PostMapping
-    public ResponseEntity<Disciplina> post(@RequestBody Disciplina disciplina, UriComponentsBuilder uriBuilder){
-        Disciplina novaDisciplina = service.insert(disciplina);
-        URI uri = uriBuilder.path("api/v1/disciplina").buildAndExpand().toUri();
-        return ResponseEntity.created(uri).body(novaDisciplina);
+    public ResponseEntity<Disciplina> save(@RequestBody Disciplina disciplina, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        service.save(disciplina);
+
+        StringBuffer path = new StringBuffer();
+
+        path.append(request.getRequestURI())
+            .append("/")
+            .append(disciplina.getId());
+
+
+        URI uri = new URI(path.toString());
+
+        return ResponseEntity.created(uri).body(disciplina);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Disciplina> delete(@PathVariable Integer id){
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Disciplina> put(@RequestBody Disciplina disciplina, @PathVariable Integer id){
-        service.put(disciplina, id);
+    @PutMapping
+    public ResponseEntity<Disciplina> update(@RequestBody Disciplina disciplina){
+        service.update(disciplina);
         return ResponseEntity.ok().body(disciplina);
     }
 
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<Disciplina> patch(@RequestBody Map<String, Object> disciplina, @PathVariable Integer id){
-        Disciplina disciplinaAtualizada = service.patch(disciplina, id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Disciplina> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
+        Disciplina disciplinaAtualizada = service.updatePartial(mapValores, id);
         return ResponseEntity.ok().body(disciplinaAtualizada);
     }
 }

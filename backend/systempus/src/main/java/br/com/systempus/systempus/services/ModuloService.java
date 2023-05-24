@@ -9,19 +9,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import br.com.systempus.systempus.domain.Modulo;
+import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
 import br.com.systempus.systempus.repository.ModuloRepository;
+import br.com.systempus.systempus.services.interfaces.IModuloService;
 
 @Service
-public class ModuloService {
+public class ModuloService implements IModuloService{
 
     @Autowired
     private ModuloRepository repository;
-
-    public Modulo insert(Modulo modulo){
-        Modulo resultado = repository.save(modulo);
-        return resultado;
-    }
 
     public List<Modulo> getAll(){
         List<Modulo> resultado = repository.findAll();
@@ -29,21 +26,27 @@ public class ModuloService {
     }
 
     public Modulo getOne(Integer id){
-        Modulo resultado = repository.findById(id).orElseThrow(() -> new NotFoundException("Modulo com o id=" + id + " não existe!"));
+        Modulo resultado = repository.findById(id).orElseThrow(() -> new NotFoundException(Modulo.class.getSimpleName().toString()));
         return resultado;
+    }
+
+    public void save(Modulo modulo){
+        if (modulo.getId() == null)
+            repository.save(modulo);
+        throw new IllegalStateException(Modulo.class.getSimpleName().toString());
     }
 
     public void delete(Integer id){
         if (repository.existsById(id)){
             repository.deleteById(id);
         }else{
-            throw new NotFoundException("Modulo com o id=" + id + " não existe!");
+            throw new NotFoundException(Modulo.class.getSimpleName().toString(), id);
         }
     }
 
-    public void put(Modulo modulo, Integer id){
-        if(repository.existsById(id)){
-            Modulo moduloExistente = repository.findById(id).get();
+    public void update(Modulo modulo){
+        if(repository.existsById(modulo.getId())){
+            Modulo moduloExistente = repository.findById(modulo.getId()).get();
 
             moduloExistente.setNumero(modulo.getNumero());
             moduloExistente.setDataInicio(modulo.getDataInicio());
@@ -53,15 +56,15 @@ public class ModuloService {
 
             repository.saveAndFlush(moduloExistente);
         }else{
-            throw new NotFoundException("Modulo com o id=" + id + " não existe!");
+            throw new NotFoundException(Modulo.class.getSimpleName().toString(), modulo.getId());
         }
     }
 
-    public Modulo patch(Map<String, Object> modulo, Integer id){
+    public Modulo updatePartial(Map<String, Object> mapValores, Integer id){
         if(repository.existsById(id)){
             Modulo moduloExistente = repository.findById(id).get();
 
-            modulo.forEach(
+            mapValores.forEach(
                 (campo, valor)->{
                     Field field = ReflectionUtils.findField(Modulo.class, campo);
                     field.setAccessible(true);
@@ -72,7 +75,7 @@ public class ModuloService {
             repository.saveAndFlush(moduloExistente);
             return moduloExistente;
         }else{
-            throw new NotFoundException("Modulo com o id=" + id + " não existe!");
+            throw new NotFoundException(Modulo.class.getSimpleName().toString(), id);
         }
     }
 }

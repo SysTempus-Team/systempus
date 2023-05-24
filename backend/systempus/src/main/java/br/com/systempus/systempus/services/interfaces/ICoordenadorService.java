@@ -1,4 +1,4 @@
-package br.com.systempus.systempus.services;
+package br.com.systempus.systempus.services.interfaces;
 import java.util.List;
 import java.util.Map;
 
@@ -13,14 +13,12 @@ public interface ICoordenadorService{
 
     public List<Coordenador> getAll();
 
-    public void insert(Coordenador coordenador);
+    public void save(Coordenador coordenador);
 
     public void delete(Integer id);
 
     public void update(Coordenador coordenador);
 
 	public Coordenador updatePartial(Map<String, Object> mapValores, Integer id);
-
-    
 
 }

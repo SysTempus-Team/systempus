@@ -1,6 +1,7 @@
 package br.com.systempus.systempus.controller;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,20 +16,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
+
 
 import br.com.systempus.systempus.domain.Modulo;
 import br.com.systempus.systempus.services.ModuloService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "api/v1/modulo")
+@RequestMapping("api/v1/modulo")
 public class ModuloController {
 
     @Autowired
     private ModuloService service;
 
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Modulo> getOne(@PathVariable Integer id){
         return ResponseEntity.ok().body(service.getOne(id));
     }
@@ -39,27 +42,35 @@ public class ModuloController {
     }
 
     @PostMapping
-    public ResponseEntity<Modulo> post(@RequestBody Modulo modulo, UriComponentsBuilder uriBuilder){
-        Modulo novoModulo = service.insert(modulo);
-        URI uri = uriBuilder.path("api/v1/modulo").buildAndExpand().toUri();
-        return ResponseEntity.created(uri).body(novoModulo);
+    public ResponseEntity<Modulo> save(@RequestBody Modulo modulo, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        service.save(modulo);
+
+        StringBuffer path = new StringBuffer();
+
+        path.append(request.getRequestURI())
+            .append("/")
+            .append(modulo.getId());
+
+        URI uri = new URI(path.toString());
+
+        return ResponseEntity.created(uri).body(modulo);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Modulo> delete(@PathVariable Integer id){
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Modulo> put(@RequestBody Modulo modulo, @PathVariable Integer id){
-        service.put(modulo, id);
+    @PutMapping
+    public ResponseEntity<Modulo> update(@RequestBody Modulo modulo){
+        service.update(modulo);
         return ResponseEntity.ok().body(modulo);
     }
 
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<Modulo> patch(@RequestBody Map<String, Object> modulo, @PathVariable Integer id){
-        Modulo moduloAtualizado = service.patch(modulo, id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Modulo> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
+        Modulo moduloAtualizado = service.updatePartial(mapValores, id);
         return ResponseEntity.ok().body(moduloAtualizado);
     }
 }

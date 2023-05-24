@@ -2,16 +2,30 @@ package br.com.systempus.systempus.domain;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-@MappedSuperclass
-@Table(name = "tb_profissional")
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "cpf"), name = "tb_profissional")
 public class Profissional {
-    @NotNull(message = "Campo Obrigatório")
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotNull(message = "Campo obrigatório")
     @CPF(message = "CPF inválido")
+    @Column(unique = true)
     private String cpf;
 
     @NotNull(message = "Campo Obrigatório")

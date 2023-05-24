@@ -9,11 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import br.com.systempus.systempus.domain.Professor;
+import br.com.systempus.systempus.error.DataIntegrityViolationException;
+import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
 import br.com.systempus.systempus.repository.ProfessorRepository;
+import br.com.systempus.systempus.services.interfaces.IProfessorService;
 
 @Service
-public class ProfessorService {
+public class ProfessorService implements IProfessorService{
 
     @Autowired
     private ProfessorRepository repository;
@@ -24,24 +27,32 @@ public class ProfessorService {
     }
 
     public Professor getOne(Integer id){
-        return repository.findById(id).orElseThrow(() -> new NotFoundException("Professor com o id=" + id + "não existe!"));
+        return repository.findById(id).orElseThrow(() -> new NotFoundException(Professor.class.getSimpleName().toString(), id));
     }
 
-    public Professor save(Professor professor){
-        return repository.save(professor);
+    public void save(Professor professor){
+        if (professor.getId() == null){
+            if (!repository.existsByCPF(professor.getCpf())){
+                repository.save(professor);
+            }else{
+                throw new DataIntegrityViolationException(professor.getCpf());
+            }
+        }else{
+            throw new IllegalStateException(Professor.class.getSimpleName().toString());
+        }
     }
 
     public void delete(Integer id){
         if (repository.existsById(id)){
             repository.deleteById(id);
         }else{
-            throw new NotFoundException("Professor com o id=" + id + " não existe!");
+            throw new NotFoundException(Professor.class.getSimpleName().toString(), id);
         }
     }
 
-    public void update(Professor professor, Integer id){
-        if(repository.existsById(id)){
-            Professor professorExistente = repository.findById(id).get();//Pegar Professor existente no repository
+    public void update(Professor professor){
+        if(repository.existsById(professor.getId())){
+            Professor professorExistente = repository.findById(professor.getId()).get();//Pegar Professor existente no repository
 
             professorExistente.setCpf(professor.getCpf());//Setar CPF do Professor Existente
             professorExistente.setNome(professor.getNome());
@@ -51,16 +62,16 @@ public class ProfessorService {
 
             repository.saveAndFlush(professorExistente);
         }else{
-            throw new NotFoundException("Professor com o id=" + id + " não existe!");
+            throw new NotFoundException(Professor.class.getSimpleName().toString(), professor.getId());
         }
     }
 
 
-    public Professor patch(Map<String, Object> professor, Integer id){//Conjunto de valores
+    public Professor updatePartial(Map<String, Object> mapValores, Integer id){//Conjunto de valores
         if(repository.existsById(id)){
             Professor professorExistente = repository.findById(id).get();//Pegar Professor existente no repository
 
-            professor.forEach(//Transita pela classe professor passada
+            mapValores.forEach(//Transita pela classe professor passada
                 (campo, valor)->{//Parâmetros referentes ao campo a ser preenchido e aos valores [String, Professor]
                     Field field = ReflectionUtils.findField(Professor.class, campo);//Classe Field procura o campo passado na classe professor
                     field.setAccessible(true);//Classe Field abre o acesso ao atributo da classe[public]
@@ -72,7 +83,7 @@ public class ProfessorService {
             repository.saveAndFlush(professorExistente);
             return professorExistente;
         }else{
-            throw new NotFoundException("Professor com o id=" + id + " não existe!");
+            throw new NotFoundException(Professor.class.getSimpleName().toString(), id);
         }
     }
 

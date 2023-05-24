@@ -9,8 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import br.com.systempus.systempus.domain.Coordenador;
+import br.com.systempus.systempus.error.DataIntegrityViolationException;
+import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
 import br.com.systempus.systempus.repository.CoordenadorRepository;
+import br.com.systempus.systempus.services.interfaces.ICoordenadorService;
 
 @Service
 public class CoordenadorService implements ICoordenadorService{
@@ -19,7 +22,7 @@ public class CoordenadorService implements ICoordenadorService{
 
     public Coordenador getOne(Integer id) {
         Coordenador resultado = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Coordenador com o id=" + id + " não existe!"));
+                .orElseThrow(() -> new NotFoundException(Coordenador.class.getSimpleName().toString(), id));
         return resultado;
     }
 
@@ -28,11 +31,15 @@ public class CoordenadorService implements ICoordenadorService{
         return resultado;
     }
 
-    public void insert(Coordenador coordenador) {
+    public void save(Coordenador coordenador) {
         if ((coordenador.getId() == null)) {
-            repository.save(coordenador);
+            if (!repository.existsByCPF(coordenador.getCpf())){
+                repository.save(coordenador);
+            }else{
+                throw new DataIntegrityViolationException(coordenador.getCpf());
+            }
         } else {
-            throw new IllegalStateException("Coordenador com o id=" + coordenador.getId() + " já existe!");
+            throw new IllegalStateException(Coordenador.class.getSimpleName().toString());
         }
     }
 
@@ -40,14 +47,14 @@ public class CoordenadorService implements ICoordenadorService{
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new NotFoundException("Coordenador com o id=" + id + " não existe!");
+            throw new NotFoundException(Coordenador.class.getSimpleName().toString(), id);
         }
     }
 
     public void update(Coordenador coordenador) {
 
         if (!repository.existsById(coordenador.getId()))
-            throw new NotFoundException("Coordenador com o id=" + coordenador.getId() + " não existe!");
+        throw new NotFoundException(Coordenador.class.getSimpleName().toString(), coordenador.getId());
 
         Coordenador coordenadorExistente = repository.findById(coordenador.getId()).get();
 
@@ -63,7 +70,7 @@ public class CoordenadorService implements ICoordenadorService{
     public Coordenador updatePartial(Map<String, Object> mapValores, Integer id) {
 
         if (!repository.existsById(id))
-            throw new NotFoundException("Coordenador com o id=" + id + " não existe!");
+        throw new NotFoundException(Coordenador.class.getSimpleName().toString(), id);
 
         Coordenador coordenadorExistente = repository.findById(id).get();
 

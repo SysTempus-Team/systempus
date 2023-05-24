@@ -9,12 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import br.com.systempus.systempus.domain.Curso;
-import br.com.systempus.systempus.domain.enumerador.NivelEnsino;
+import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
 import br.com.systempus.systempus.repository.CursoRepository;
+import br.com.systempus.systempus.services.interfaces.ICursoService;
 
 @Service
-public class CursoService {
+public class CursoService implements ICursoService{
 
     @Autowired
     private CursoRepository repository;
@@ -25,26 +26,27 @@ public class CursoService {
     }
 
     public Curso getOne(Integer id) {
-        Curso resultado = repository.findById(id).orElseThrow(() -> new NotFoundException("Curso com id=" + id + " não existe!"));
+        Curso resultado = repository.findById(id).orElseThrow(() -> new NotFoundException(Curso.class.getSimpleName().toString(), id));
         return resultado;
     }
 
-    public Curso insert(Curso curso) {
-        Curso resultado = repository.save(curso);
-        return resultado;
+    public void save(Curso curso) {
+        if (curso.getId() == null)
+            repository.save(curso);
+        throw new IllegalStateException(Curso.class.getSimpleName().toString());
     }
 
     public void delete(Integer id) {
         if (repository.existsById(id)) {
             repository.deleteById(id);
         } else {
-            throw new NotFoundException("Curso com id=" + id + " não existe!");
+            throw new NotFoundException(Curso.class.getSimpleName().toString(), id);
         }
     }
 
-    public void put(Curso curso, Integer id) {
-        if (repository.existsById(id)) {
-            Curso cursoExistente = repository.findById(id).get();
+    public void update(Curso curso) {
+        if (repository.existsById(curso.getId())) {
+            Curso cursoExistente = repository.findById(curso.getId()).get();
 
             cursoExistente.setNome(curso.getNome());
             cursoExistente.setQtdPeriodos(curso.getQtdPeriodos());
@@ -55,16 +57,16 @@ public class CursoService {
             repository.saveAndFlush(cursoExistente);
 
         } else {
-            throw new NotFoundException("Curso com id=" + id + " não existe!");
+            throw new NotFoundException(Curso.class.getSimpleName().toString(), curso.getId());
         }
     }
 
 
-    public Curso patch(Map<String, Object> mapCampoValor, Integer id) {
+    public Curso updatePartial(Map<String, Object> mapValores, Integer id) {
         if (repository.existsById(id)) {
             Curso cursoExistente = repository.findById(id).get();
 
-            mapCampoValor.forEach(
+            mapValores.forEach(
                     (campo, valor) -> {
                         Field field = ReflectionUtils.findField(Curso.class, campo);
                         field.setAccessible(true);
@@ -82,7 +84,8 @@ public class CursoService {
             repository.saveAndFlush(cursoExistente);
             return cursoExistente;
         } else {
-            throw new NotFoundException("Curso com id=" + id + " não existe!");
+            throw new NotFoundException(Curso.class.getSimpleName().toString(), id);
         }
     }
+
 }
