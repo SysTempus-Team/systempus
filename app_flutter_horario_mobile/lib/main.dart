@@ -1,10 +1,14 @@
+import 'package:app_flutter_horario_mobile/domain/disciplina.dart';
 import 'package:app_flutter_horario_mobile/home.dart';
 import 'package:app_flutter_horario_mobile/home_adicionar_disciplina.dart';
 import 'package:app_flutter_horario_mobile/home_disciplina.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider <Disciplina>(
+    lazy: false,
+      create: (context) => Disciplina(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
