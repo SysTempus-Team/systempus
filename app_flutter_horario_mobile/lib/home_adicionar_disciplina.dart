@@ -3,6 +3,9 @@ import 'package:app_flutter_horario_mobile/components/painel_bem_vindo.dart';
 import 'package:app_flutter_horario_mobile/components/painel_bottom_edicao.dart';
 import 'package:app_flutter_horario_mobile/components/painel_centro.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'domain/disciplina.dart';
 
 class HomeAdicionarDisciplina extends StatefulWidget {
   const HomeAdicionarDisciplina({super.key});
@@ -49,77 +52,66 @@ class _HomeAdicionarDisciplinaState extends State<HomeAdicionarDisciplina> {
                 const SizedBox(
                   height: 20,
                 ),
-
                 Container(
                   constraints: const BoxConstraints.expand(
                     width: 300,
                     height: 900,
-
-                    
                   ),
-                  child: 
-                  Column(
-                    children: const [
-                         Divider(
-                    color: Colors.white,
-                 
-                   ),
-                   Divider(
-                    color: Colors.white,
-                   ),
-                  SizedBox(
-                  height: 10,
-                ),
-                Input(label: 'NOME'),
-                 SizedBox(
-                  height: 10,
-                ),
-                
-                
-                Input(label: 'COORDENADORA'),
-                 SizedBox(
-                  height: 10,
-                ),
-                
-                Input(label: 'MODALIDADE'),
-                 SizedBox(
-                  height: 10,
-                ),
-                Input(label: 'MÓDULO'),
-                 SizedBox(
-                  height: 10,
-                ),
-                Input(label: 'SIGLA'),
-                 SizedBox(
-                  height: 10,
-                ),
-                Input(label: 'QUANTIDADE DE PERÍODO'),
-                 SizedBox(
-                  height: 10,
-                ),
-                Input(label: 'CARGA HORÁRIA'),
-                 SizedBox(
-                  height: 10,
-                ),
-                Input(label: 'NÍVEL/ENSINO'),
-                 SizedBox(
-                  height: 10,
-                ),
-                  Divider(
-                    color: Colors.white,
-                 
-                   ),
-                   Divider(
-                    color: Colors.white,
-                   ),
-
-                   PainelButtomEdocao(),
-               
-
-              
-
-
-
+                  child: Column(
+                    children: [
+                      Divider(
+                        color: Colors.white,
+                      ),
+                      Divider(
+                        color: Colors.white,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(
+                        label: 'NOME',
+                        onChanged: (value) {
+                          Provider.of<Disciplina>(context, listen: false).nome;
+                        },
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(label: 'COORDENADORA'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(label: 'MODALIDADE'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(label: 'MÓDULO'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(label: 'SIGLA'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(label: 'QUANTIDADE DE PERÍODO'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(label: 'CARGA HORÁRIA'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Input(label: 'NÍVEL/ENSINO'),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Divider(
+                        color: Colors.white,
+                      ),
+                      Divider(
+                        color: Colors.white,
+                      ),
+                      PainelButtomEdocao(),
                     ],
                   ),
                 )
