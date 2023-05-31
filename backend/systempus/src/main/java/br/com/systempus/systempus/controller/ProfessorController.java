@@ -1,6 +1,7 @@
 package br.com.systempus.systempus.controller;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
@@ -15,19 +16,20 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import br.com.systempus.systempus.domain.Professor;
 import br.com.systempus.systempus.services.ProfessorService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping(value = "api/v1/professor")
+@RequestMapping("api/v1/professor")
 public class ProfessorController {
 
     @Autowired
     private ProfessorService professorService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Professor> getOne(@PathVariable Integer id){
         return ResponseEntity.ok().body(professorService.getOne(id));
     }
@@ -38,27 +40,35 @@ public class ProfessorController {
     }
 
     @PostMapping
-    public ResponseEntity<Professor> post(@RequestBody Professor professor, UriComponentsBuilder uriBuilder){
-        Professor novoProfessor = professorService.save(professor);
-        URI uri = uriBuilder.path("api/v1/professor").buildAndExpand().toUri();
-        return ResponseEntity.created(uri).body(novoProfessor);
+    public ResponseEntity<Professor> save(@RequestBody Professor professor, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        professorService.save(professor);
+
+        StringBuffer path = new StringBuffer();
+
+        path.append(request.getRequestURI())
+            .append("/")
+            .append(professor.getId());
+
+        URI uri = new URI(path.toString());
+
+        return ResponseEntity.created(uri).body(professor);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Professor> delete(@PathVariable Integer id){
         professorService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Professor> put(@RequestBody Professor professor, @PathVariable Integer id){
-        professorService.update(professor, id);
+    @PutMapping
+    public ResponseEntity<Professor> update(@RequestBody Professor professor){
+        professorService.update(professor);
         return ResponseEntity.ok().body(professor);
     }
 
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<Professor> patch(@RequestBody Map<String, Object> professor, @PathVariable Integer id){
-        Professor professorAtualizado = professorService.patch(professor, id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Professor> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
+        Professor professorAtualizado = professorService.updatePartial(mapValores, id);
         return ResponseEntity.ok().body(professorAtualizado);
     }
 

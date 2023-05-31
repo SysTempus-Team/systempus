@@ -9,22 +9,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import br.com.systempus.systempus.domain.Disciplina;
+import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
 import br.com.systempus.systempus.repository.DisciplinaRepository;
+import br.com.systempus.systempus.services.interfaces.IDisciplinaService;
 
 @Service
-public class DisciplinaService {
+public class DisciplinaService implements IDisciplinaService{
 
     @Autowired
     private DisciplinaRepository repository;
 
-    public Disciplina insert(Disciplina disciplina){
-        Disciplina resultado = repository.save(disciplina);
-        return resultado;
-    }
-
     public Disciplina getOne(Integer id){
-        Disciplina resultado = repository.findById(id).orElseThrow(() -> new NotFoundException("Disciplina com o id=" + id + " não existe!"));
+        Disciplina resultado = repository.findById(id).orElseThrow(() -> new NotFoundException(Disciplina.class.getSimpleName().toString(), id));
         return resultado;
     }
 
@@ -33,17 +30,23 @@ public class DisciplinaService {
         return resultado;
     }
 
+    public void save(Disciplina disciplina){
+        if (disciplina.getId() == null)
+            repository.save(disciplina);
+        throw new IllegalStateException(Disciplina.class.getSimpleName().toString());
+    }
+
     public void delete(Integer id){
         if (repository.existsById(id)){
             repository.deleteById(id);
         }else{
-            throw new NotFoundException("Disciplina com o id=" + id + " não existe!");
+            throw new NotFoundException(Disciplina.class.getSimpleName().toString(), id);
         }
     }
 
-    public void put(Disciplina disciplina, Integer id){
-        if(repository.existsById(id)){
-            Disciplina disciplinaExistente = repository.findById(id).get();
+    public void update(Disciplina disciplina){
+        if(repository.existsById(disciplina.getId())){
+            Disciplina disciplinaExistente = repository.findById(disciplina.getId()).get();
 
             disciplinaExistente.setNome(disciplina.getNome());
             disciplinaExistente.setModulo(disciplina.getModulo());
@@ -51,15 +54,15 @@ public class DisciplinaService {
 
             repository.saveAndFlush(disciplinaExistente);
         }else{
-            throw new NotFoundException("Disciplina com o id=" + id + " não existe!");
+            throw new NotFoundException(Disciplina.class.getSimpleName().toString(), disciplina.getId());
         }
     }
 
-    public Disciplina patch(Map<String, Object> disciplina, Integer id){
+    public Disciplina updatePartial(Map<String, Object> mapValores, Integer id){
         if(repository.existsById(id)){
             Disciplina disciplinaExistente = repository.findById(id).get();
 
-            disciplina.forEach(
+            mapValores.forEach(
                 (campo, valor)->{
                     Field field = ReflectionUtils.findField(Disciplina.class, campo);
                     field.setAccessible(true);
@@ -71,7 +74,7 @@ public class DisciplinaService {
             repository.saveAndFlush(disciplinaExistente);
             return disciplinaExistente;
         }else{
-            throw new NotFoundException("Disciplina com o id=" + id + " não existe!");
+            throw new NotFoundException(Disciplina.class.getSimpleName().toString(), id);
         }
     }
 }

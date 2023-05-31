@@ -1,6 +1,8 @@
 package br.com.systempus.systempus.domain.enumerador;
 
-import java.lang.reflect.Field;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 public enum NivelEnsino {
 
@@ -21,23 +23,20 @@ public enum NivelEnsino {
     public int getValue(){
         return value;
     }
-
+    @JsonValue
     public String getNome(){
         return nome;
     }
 
-
+    @JsonCreator
     public static NivelEnsino toEnum(Integer codigo){
-        if(codigo == null){
-            return null;
-            throw IllegalArgumentException("Código do Nível de Ensino Inválido: " + codigo);
-        }else{
-            for( NivelEnsino nivelEnsino : NivelEnsino.values()){
-                if(codigo.equals(nivelEnsino.getValue())){
-                    return nivelEnsino;
-                }
+      
+        for( NivelEnsino nivelEnsino : NivelEnsino.values()){
+            if(codigo == nivelEnsino.getValue()){
+                return nivelEnsino;
             }
         }
+        return null;
     }
 
 

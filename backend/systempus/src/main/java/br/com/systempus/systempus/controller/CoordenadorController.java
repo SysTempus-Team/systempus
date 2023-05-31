@@ -11,23 +11,26 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
 import br.com.systempus.systempus.domain.Coordenador;
-import br.com.systempus.systempus.services.CoordenadorService;
+import br.com.systempus.systempus.services.interfaces.ICoordenadorService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "api/v1/coordenador")
+@RequestMapping("api/v1/coordenador")
 public class CoordenadorController {
 
     @Autowired
-    private CoordenadorService coordenadorService;
+    private ICoordenadorService coordenadorService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Coordenador> getOne(@PathVariable Integer id){
         return ResponseEntity.ok().body(coordenadorService.getOne(id));
     }
@@ -38,28 +41,33 @@ public class CoordenadorController {
     }
 
     @PostMapping
-    public ResponseEntity<Coordenador> post(@RequestBody Coordenador coordenador, UriComponentsBuilder uriBuilder){
-        Coordenador novoCoordenador = coordenadorService.insert(coordenador);
-        URI uri = uriBuilder.path("api/v1/coordenador").buildAndExpand().toUri();
-        return ResponseEntity.created(uri).body(novoCoordenador);
+    public ResponseEntity<Coordenador> save(@Valid @RequestBody Coordenador coordenador, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        coordenadorService.save(coordenador);
+
+        StringBuffer path = new StringBuffer();
+        path.append(request.getRequestURI())
+            .append("/")
+            .append(coordenador.getId());
+
+        URI uri = new URI(path.toString());
+        return ResponseEntity.created(uri).body(coordenador);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Coordenador> delete(@PathVariable Integer id){
         coordenadorService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Coordenador> put(@RequestBody Coordenador coordenador, @PathVariable Integer id){
-        coordenadorService.put(coordenador, id);
+    @PutMapping
+    public ResponseEntity<Coordenador> update(@RequestBody Coordenador coordenador){
+        coordenadorService.update(coordenador);
         return ResponseEntity.ok().body(coordenador);
     }
 
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<Coordenador> patch(@RequestBody Map<String, Object> coordenador, @PathVariable Integer id){
-        Coordenador coordenaAtualizado = coordenadorService.patch(coordenador, id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Coordenador> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
+        Coordenador coordenaAtualizado = coordenadorService.updatePartial(mapValores, id);
         return ResponseEntity.ok().body(coordenaAtualizado);
     }
-
 }

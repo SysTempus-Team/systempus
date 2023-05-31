@@ -1,6 +1,5 @@
 package br.com.systempus.systempus.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,24 +11,26 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
 import br.com.systempus.systempus.domain.Curso;
 import br.com.systempus.systempus.services.CursoService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(value = "api/v1/curso")
+@RequestMapping("api/v1/curso")
 public class CursoController {
 
     @Autowired
     private CursoService cursoService;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Curso> getOne(@PathVariable Integer id) {
         return ResponseEntity.ok().body(cursoService.getOne(id));
     }
@@ -39,28 +40,35 @@ public class CursoController {
         return ResponseEntity.ok().body(cursoService.getAll());
     }
 
+
     @PostMapping
-    public ResponseEntity<Curso> post(@Valid @RequestBody Curso curso, UriComponentsBuilder uriBuilder) {
-        Curso novoCurso = cursoService.insert(curso);
-        URI uri = uriBuilder.path("api/v1/curso").buildAndExpand().toUri();
-        return ResponseEntity.created(uri).body(novoCurso);
+    public ResponseEntity<Curso> save(@Valid @RequestBody Curso curso, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException {
+        cursoService.save(curso);
+
+        StringBuffer path = new StringBuffer();
+        path.append(request.getRequestURI())
+            .append("/")
+            .append(curso.getId());
+
+        URI uri = new URI(path.toString());
+        return ResponseEntity.created(uri).body(curso);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Curso> delete(@PathVariable Integer id) {
         cursoService.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(value = "/{id}")
-    public ResponseEntity<Curso> put(@Valid @RequestBody Curso curso, @PathVariable Integer id) {
-        cursoService.put(curso, id);
+    @PutMapping
+    public ResponseEntity<Curso> update(@Valid @RequestBody Curso curso) {
+        cursoService.update(curso);
         return ResponseEntity.ok().body(curso);
     }
 
-    @PatchMapping(value = "/{id}")
-    public ResponseEntity<Curso> patch(@RequestBody Map<String, Object> curso, @PathVariable Integer id) {
-        Curso cursoAtualizado = cursoService.patch(curso, id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Curso> upatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id) {
+        Curso cursoAtualizado = cursoService.updatePartial(mapValores, id);
         return ResponseEntity.ok().body(cursoAtualizado);
     }
 
