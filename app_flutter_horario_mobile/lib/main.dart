@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider <Disciplina>(
-    lazy: false,
-      create: (context) => Disciplina(), child: const MyApp()));
+  runApp(  MyApp());
 }
 
 class MyApp extends StatelessWidget {

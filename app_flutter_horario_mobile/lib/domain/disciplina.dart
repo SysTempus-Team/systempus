@@ -1,38 +1,40 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:app_flutter_horario_mobile/domain/modulo.dart';
+import 'package:app_flutter_horario_mobile/domain/professor.dart';
 
-class Disciplina extends ChangeNotifier {
+
+
+class Disciplina   {
+  int? _id;
   String? _nome;
-  String? _sigla;
-  int? _quantidadePeriodo;
-  int? _cargaHoraria;
+  Modulo? _modulo;
+  List<Professor>? _professores;
 
-  Disciplina({cargaHoraria, nome, quantidadePeriodo, sigla});
+    Disciplina(
+      { int? id,
+  String? nome,
+  Modulo? modulo,
+  List<Professor>? professores});
+ 
+  get id => this._id;
 
-  String? get nome => _nome;
-  set nome(String? value) {
-    _nome = value;
-    notifyListeners();
+ set id( value) => this._id = value;
+
+  get nome => this._nome;
+
+ set nome( value) => this._nome = value;
+
+  get modulo => this._modulo;
+
+ set modulo( value) => this._modulo = value;
+
+  get professores => this._professores;
+
+ set professores( value) => this._professores = value;
+
+
+   
+  
+
+  
   }
 
-  String? get sigla => _sigla;
-
-  set sigla(String? value) {
-    _sigla = value;
-    notifyListeners();
-  }
-
-  int? get quantidadePeriodo => _quantidadePeriodo;
-
-  set quantidadePeriodo(int? value) {
-    _quantidadePeriodo = value;
-    notifyListeners();
-  }
-
-  int? get cargaHoraria => _cargaHoraria;
-
-  set cargaHoraria(int? value) {
-    _cargaHoraria = value;
-    notifyListeners();
-  }
-}

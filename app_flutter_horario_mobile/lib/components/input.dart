@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/material.dart';
 
 typedef FunctionStringCallback = void Function(String);
@@ -35,11 +32,11 @@ class _InputState extends State<Input> {
           ),
           TextField(
             cursorHeight: 20,
-            onChanged:  (value) {
-        if (widget.onChanged != null) {
-          widget.onChanged!(value);
-        }
-      },
+            onChanged: (value) {
+              if (widget.onChanged != null) {
+                widget.onChanged!(value);
+              }
+            },
             decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(vertical: 20),
                 filled: true,
