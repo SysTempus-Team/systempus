@@ -34,11 +34,8 @@ class _PainelButtomEdocaoState extends State<PainelButtomEdocao> {
             label: 'SALVAR',
             color: (0xFFF2B374),
             onPressed: () {
-              
-              
-              Disciplina disciplina =
-                  Provider.of<Disciplina>(context, listen: false);
-              print("Nome: ${disciplina.nome}");
+                          
+             
             },
             base: 75,
             altura: 40),

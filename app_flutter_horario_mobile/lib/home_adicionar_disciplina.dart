@@ -70,9 +70,7 @@ class _HomeAdicionarDisciplinaState extends State<HomeAdicionarDisciplina> {
                       ),
                       Input(
                         label: 'NOME',
-                        onChanged: (value) {
-                          Provider.of<Disciplina>(context, listen: false).nome;
-                        },
+                       
                       ),
                       SizedBox(
                         height: 10,
