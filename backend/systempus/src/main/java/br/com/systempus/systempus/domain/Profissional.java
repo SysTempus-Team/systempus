@@ -3,12 +3,15 @@ package br.com.systempus.systempus.domain;
 import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +19,7 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "cpf"), name = "tb_profissional")
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "cpf"), name = "profissional")
 public class Profissional {
 
     @Id
@@ -33,6 +36,14 @@ public class Profissional {
     private String nome;
 
     private String telefone;
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
 
     public void setCpf(String cpf){
         this.cpf = cpf;

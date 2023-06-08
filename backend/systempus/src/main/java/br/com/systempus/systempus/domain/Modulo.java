@@ -1,6 +1,10 @@
 package br.com.systempus.systempus.domain;
 
+import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +17,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "tb_modulo")
+@Table(name = "modulo")
 public class Modulo {
 
     @Id
@@ -23,14 +27,16 @@ public class Modulo {
     @NotNull(message = "Campo Obrigatório")
     private Integer numero;
 
-    private String dataInicio;
-    private String dataFim;
+    private LocalDate dataInicio;
+    private LocalDate dataFim;
 
+    @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "curso", referencedColumnName = "id")
+    @JoinColumn(name = "id_curso")
     private Curso curso;
 
-    @OneToMany
+    @JsonManagedReference
+    @OneToMany(mappedBy = "modulo")
     private List<Disciplina> disciplinas;
 
     public void setId(Integer id) {
@@ -49,19 +55,19 @@ public class Modulo {
         return numero;
     }
 
-    public void setDataInicio(String dataInicio) {
+    public void setDataInicio(LocalDate dataInicio) {
         this.dataInicio = dataInicio;
     }
 
-    public String getDataInicio() {
+    public LocalDate getDataInicio() {
         return dataInicio;
     }
 
-    public void setDataFim(String dataFim) {
+    public void setDataFim(LocalDate dataFim) {
         this.dataFim = dataFim;
     }
 
-    public String getDataFim() {
+    public LocalDate getDataFim() {
         return dataFim;
     }
 

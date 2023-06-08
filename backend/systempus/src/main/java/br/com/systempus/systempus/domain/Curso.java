@@ -2,9 +2,11 @@ package br.com.systempus.systempus.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import br.com.systempus.systempus.domain.enumerador.Modalidade;
 import br.com.systempus.systempus.domain.enumerador.NivelEnsino;
-//import br.com.systempus.systempus.Coordenador;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,18 +14,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "tb_curso")
+@Table(name = "curso")
 public class Curso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
 
     @NotNull(message = "Campo obrigatório")
@@ -44,12 +47,18 @@ public class Curso {
 
     public Curso(){}
 
-    @OneToMany
+    @JsonManagedReference
+    @OneToMany(mappedBy = "curso")
     private List<Modulo> modulos;
 
     @ManyToOne
-    @JoinColumn(name = "coordenador", referencedColumnName = "id")
+    @JoinColumn(name = "id_coordenador")
+    @JsonBackReference
     private Coordenador coordenador;
+
+    @JsonBackReference
+    @ManyToMany (mappedBy = "cursos")
+    private List<Professor> professores;
 
     public void setModalidade(Modalidade modalidade){
         this.modalidade = modalidade;
@@ -111,14 +120,23 @@ public class Curso {
         this.modulos = modulos;
     }
 
+
     public List<Modulo> getModulos(){
         return modulos;
+    }
+
+    public void setProfessores(List<Professor> professores) {
+        this.professores = professores;
+    }
+
+    public List<Professor> getProfessores() {
+        return professores;
     }
 
     @Override
     public String toString() {
         return "Curso [id=" + id + ", nome=" + nome + ", nivelEnsino=" + nivelEnsino + ", qtdPeriodos=" + qtdPeriodos
-                + ", modalidade=" + modalidade + ", cargaTotal=" + cargaTotal + ", modulos=" + modulos
+                + ", modalidade=" + modalidade + ", cargaTotal=" + cargaTotal + ", modulo=" + modulos
                 + ", coordenador=" + coordenador + "]";
     }
 
