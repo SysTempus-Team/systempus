@@ -36,7 +36,7 @@ CREATE TABLE curso(
     modalidade integer not null,
     qtd_Periodos integer not null,
     carga_Total integer,
-    id_coordenador integer not null,
+    id_coordenador integer,
 
     constraint rel_curso_coordenador foreign key(id_coordenador) references coordenador
 );
@@ -46,7 +46,7 @@ CREATE TABLE modulo(
     numero integer not null,
     data_Inicio date not null,
     data_Fim date not null,
-    id_curso integer not null,
+    id_curso integer,
 
     constraint rel_modulo_curso foreign key(id_curso) references curso
 );
@@ -60,10 +60,10 @@ CREATE TABLE disciplina(
 );
 
 CREATE TABLE professor_curso(
-    id_curso integer,
     id_professor integer,
-    
-    PRIMARY KEY (id_curso, id_professor),
+    id_curso integer,
+
+    PRIMARY KEY (id_professor, id_curso),
 
     constraint rel_professor_curso_curso foreign key (id_curso) references curso,
     constraint rel_professor_curso_professor foreign key(id_professor) references professor

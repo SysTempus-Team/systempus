@@ -1,6 +1,10 @@
 package br.com.systempus.systempus.services;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.NoSuchMethodException;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +19,7 @@ import br.com.systempus.systempus.repository.CursoRepository;
 import br.com.systempus.systempus.services.interfaces.ICursoService;
 
 @Service
-public class CursoService implements ICursoService{
+public class CursoService implements ICursoService {
 
     @Autowired
     private CursoRepository repository;
@@ -26,14 +30,17 @@ public class CursoService implements ICursoService{
     }
 
     public Curso getOne(Integer id) {
-        Curso resultado = repository.findById(id).orElseThrow(() -> new NotFoundException(Curso.class.getSimpleName().toString(), id));
+        Curso resultado = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(Curso.class.getSimpleName().toString(), id));
         return resultado;
     }
 
     public void save(Curso curso) {
-        if (curso.getId() == null)
+        if (curso.getId() == null) {
             repository.save(curso);
-        throw new IllegalStateException(Curso.class.getSimpleName().toString());
+        } else {
+            throw new IllegalStateException(Curso.class.getSimpleName().toString());
+        }
     }
 
     public void delete(Integer id) {
@@ -49,7 +56,9 @@ public class CursoService implements ICursoService{
             Curso cursoExistente = repository.findById(curso.getId()).get();
 
             cursoExistente.setNome(curso.getNome());
+            cursoExistente.setNivelEnsino(curso.getNivelEnsino());
             cursoExistente.setQtdPeriodos(curso.getQtdPeriodos());
+            cursoExistente.setModalidade(curso.getModalidade());
             cursoExistente.setCargaTotal(curso.getCargaTotal());
             cursoExistente.setCoordenador(curso.getCoordenador());
             cursoExistente.setModulos(curso.getModulos());
@@ -61,7 +70,6 @@ public class CursoService implements ICursoService{
         }
     }
 
-
     public Curso updatePartial(Map<String, Object> mapValores, Integer id) {
         if (repository.existsById(id)) {
             Curso cursoExistente = repository.findById(id).get();
@@ -71,15 +79,38 @@ public class CursoService implements ICursoService{
                         Field field = ReflectionUtils.findField(Curso.class, campo);
                         field.setAccessible(true);
 
-                        if (!field.getType().isEnum()){
+                        if (!(field.getType().isEnum())) {
                             ReflectionUtils.setField(field, cursoExistente, valor);
                             field.setAccessible(false);
-                        }//else{
-                            // Enum.valueOf((Class<Enum<?>>)field.getType(), valor.toString());
-                            // ReflectionUtils.setField(field, cursoExistente, );
-                        //}
-                    }
-            );
+                        } else {
+
+                            try {
+                                Class<?> enumClass = field.getType();
+
+                                Method valueOfMethod = enumClass.getMethod("toEnum", Integer.class);
+                                Enum<?> enumValor = (Enum<?>) valueOfMethod.invoke(null, (Integer) valor);
+
+                                ReflectionUtils.setField(field, cursoExistente, enumValor);
+                                field.setAccessible(false);
+                            } catch (NoSuchMethodException ex) {
+                                throw new NotFoundException("Método não encontrado no enum toEnum");
+                            } catch (IllegalAccessException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            } catch (InvocationTargetException e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+
+                            // Class<MeuEnum> enumClass = MeuEnum.class;
+                            // MeuEnum meuEnum = (MeuEnum) valueOfMethod.invoke(null, enumNome);
+
+                            // Enum<?>[] enumValues = (Enum<?>[]) field.getType().getEnumConstants();
+                            // for (Enum<?> enumValue : enumValues);
+                        }
+                    });
+
+            System.out.println(cursoExistente);
 
             repository.saveAndFlush(cursoExistente);
             return cursoExistente;

@@ -19,6 +19,7 @@ INSERT INTO professor(id) VALUES(3);
 INSERT INTO professor(id) VALUES(6);
 INSERT INTO professor(id) VALUES(7);
 INSERT INTO professor(id) VALUES(8);
+INSERT INTO professor(id) VALUES(10);
 
 INSERT INTO curso(carga_Total, modalidade, nivel_Ensino, nome, qtd_Periodos, id_coordenador) VALUES (500, 0, 4, 'Análise e Desenvolvimento de Sistemas', 5, 4);
 INSERT INTO curso(carga_Total, modalidade, nivel_Ensino, nome, qtd_Periodos, id_coordenador) VALUES (400, 1, 4, 'Design Gráfico', 4, 5);
@@ -40,13 +41,13 @@ INSERT INTO disciplina(nome, id_modulo) VALUES ('Fundamentos de Banco de Dados',
 INSERT INTO disciplina(nome, id_modulo) VALUES ('Fundamento das Cores', 3);
 INSERT INTO disciplina(nome, id_modulo) VALUES ('Arte Pré-Histórica', 4);
 
-INSERT INTO professor_curso(id_curso, id_professor) VALUES (1, 1);
-INSERT INTO professor_curso(id_curso, id_professor) VALUES (1, 2);
-INSERT INTO professor_curso(id_curso, id_professor) VALUES (1, 3);
-INSERT INTO professor_curso(id_curso, id_professor) VALUES (2, 6);
+INSERT INTO professor_curso(id_professor, id_curso) VALUES (1, 1);
+INSERT INTO professor_curso(id_professor, id_curso) VALUES (2, 1);
+INSERT INTO professor_curso(id_professor, id_curso) VALUES (3, 1);
+INSERT INTO professor_curso(id_professor, id_curso) VALUES (6, 2);
 
 INSERT INTO professor_disciplina(id_professor, id_disciplina) VALUES (1, 4);
 INSERT INTO professor_disciplina(id_professor, id_disciplina) VALUES (3, 1);
-INSERT INTO professor_disciplina(id_professor, id_disciplina) VALUES (2, 2);
+INSERT INTO professor_disciplina(id_professor, id_disciplina) VALUES (1, 2);
 INSERT INTO professor_disciplina(id_professor, id_disciplina) VALUES (3, 3);
-INSERT INTO professor_disciplina(id_professor, id_disciplina) VALUES (7, 6);
+INSERT INTO professor_disciplina(id_professor, id_disciplina) VALUES (6, 6);

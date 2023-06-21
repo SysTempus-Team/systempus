@@ -3,6 +3,8 @@ package br.com.systempus.systempus.domain;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.systempus.systempus.domain.enumerador.Modalidade;
@@ -47,16 +49,19 @@ public class Curso {
 
     public Curso(){}
 
-    @JsonManagedReference
+    //@JsonManagedReference(value = "curso_modulos")
+    @JsonIgnoreProperties("disciplinas")
     @OneToMany(mappedBy = "curso")
     private List<Modulo> modulos;
 
+    @JsonIgnoreProperties("cursos")
+    //@JsonBackReference(value = "curso_coordenador")
     @ManyToOne
     @JoinColumn(name = "id_coordenador")
-    @JsonBackReference
     private Coordenador coordenador;
 
-    @JsonBackReference
+    @JsonIgnore
+    //@JsonBackReference(value = "professores_cursos")
     @ManyToMany (mappedBy = "cursos")
     private List<Professor> professores;
 

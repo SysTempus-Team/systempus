@@ -3,8 +3,12 @@ package br.com.systempus.systempus.domain;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,15 +31,19 @@ public class Modulo {
     @NotNull(message = "Campo Obrigatório")
     private Integer numero;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataInicio;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataFim;
 
-    @JsonBackReference
+    @JsonIgnore
+    //@JsonBackReference(value = "curso_modulos")
     @ManyToOne
     @JoinColumn(name = "id_curso")
     private Curso curso;
 
-    @JsonManagedReference
+
+    //@JsonManagedReference(value = "disciplina_modulo")
     @OneToMany(mappedBy = "modulo")
     private List<Disciplina> disciplinas;
 
