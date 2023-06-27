@@ -38,8 +38,6 @@ public enum NivelEnsino {
                 return nivelEnsino;
             }
         }
-        throw new NotFoundException("Valor não encontrado da Nível de Ensino "+codigo);
+        throw new NotFoundException("Valor não encontrado da Nível de Ensino " + codigo);
     }
-
-
 }

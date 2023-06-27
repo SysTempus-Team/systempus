@@ -21,7 +21,7 @@ import br.com.systempus.systempus.services.interfaces.ICursoService;
 @Service
 public class CursoService implements ICursoService {
 
-    @Autowired
+    @Autowired//Instanciação automática
     private CursoRepository repository;
 
     public List<Curso> getAll() {
@@ -51,6 +51,8 @@ public class CursoService implements ICursoService {
         }
     }
 
+//Segue corretamente o conceito de POO
+//Problema ----> Exemplo: Um vendedor pede os seus documentos
     public void update(Curso curso) {
         if (repository.existsById(curso.getId())) {
             Curso cursoExistente = repository.findById(curso.getId()).get();
@@ -70,6 +72,8 @@ public class CursoService implements ICursoService {
         }
     }
 
+//Não Segue corretamente o ceonceito de POO [Por causa da reflexão]
+//Problema ----> Exemplo: Um vendedor chega e já pega os documentos da pessoa sem autorização
     public Curso updatePartial(Map<String, Object> mapValores, Integer id) {
         if (repository.existsById(id)) {
             Curso cursoExistente = repository.findById(id).get();
@@ -101,12 +105,6 @@ public class CursoService implements ICursoService {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();
                             }
-
-                            // Class<MeuEnum> enumClass = MeuEnum.class;
-                            // MeuEnum meuEnum = (MeuEnum) valueOfMethod.invoke(null, enumNome);
-
-                            // Enum<?>[] enumValues = (Enum<?>[]) field.getType().getEnumConstants();
-                            // for (Enum<?> enumValue : enumValues);
                         }
                     });
 
