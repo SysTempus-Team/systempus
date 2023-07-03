@@ -1,5 +1,5 @@
 # AS <NAME> to name this stage as maven
-FROM maven:3.6.3 AS maven
+FROM maven:4.0.0 AS maven
 
 WORKDIR backend/systempus/
 COPY . backend/systempus/
@@ -9,11 +9,11 @@ RUN mvn package
 # For Java 11,
 FROM adoptopenjdk/openjdk11:alpine-jre
 
-ARG JAR_FILE=spring-boot-api-tutorial.jar
+ARG JAR_FILE=systempus-v1.jar
 
 WORKDIR /opt/app
 
 # Copy the spring-boot-api-tutorial.jar from the maven stage to the /opt/app directory of the current stage.
 COPY --from=maven /usr/src/app/target/${JAR_FILE} /opt/app/
 
-ENTRYPOINT ["java","-jar","spring-boot-api-tutorial.jar"]
+ENTRYPOINT ["java","-jar","systempus-v1.jar"]
