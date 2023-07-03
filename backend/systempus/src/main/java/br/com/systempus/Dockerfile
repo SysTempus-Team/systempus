@@ -1,5 +1,5 @@
 # AS <NAME> to name this stage as maven
-FROM maven:4.0.0 AS maven
+FROM maven:4.0.00-jdk-20 AS build
 
 WORKDIR backend/systempus/
 COPY . backend/systempus/
