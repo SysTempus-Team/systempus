@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.systempus.systempus.domain.Disciplina;
 import br.com.systempus.systempus.services.DisciplinaService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/v1/disciplina")
+@Tag(name = "Disciplina")
 public class DisciplinaController {
 
     @Autowired
