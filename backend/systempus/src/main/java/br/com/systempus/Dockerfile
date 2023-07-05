@@ -3,7 +3,7 @@
 #
 FROM maven:3.8.3-openjdk-17 AS build
 WORKDIR /systempus
-COPY . /systempus/
+COPY . pom.xml /systempus/
 RUN mvn clean package
 
 #
