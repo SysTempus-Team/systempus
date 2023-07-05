@@ -2,7 +2,7 @@
 # Build stage
 #
 FROM maven:3.8.3-openjdk-17 AS build
-WORKDIR C:/Users/User/Desktop/Iniciação Científica/systempus/systempus/backend/systempus
+WORKDIR /systempus
 COPY . .
 RUN mvn clean
 
