@@ -76,14 +76,10 @@
 	</dependencies>
 
 	<build>
+	<defaultGoal>package</defaultGoal>
 	<finalName>systempus-v1</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-
-			<plugin>
+		<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<executions>
@@ -94,8 +90,7 @@
 					</execution>
 				</executions>
 			</plugin>
-
-		</plugins>
+			</plugins>
 	</build>
 
 </project>
