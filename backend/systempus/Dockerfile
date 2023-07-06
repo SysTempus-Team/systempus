@@ -4,13 +4,12 @@
 FROM maven:3.8.3-openjdk-17 AS build
 WORKDIR /systempus
 COPY . .
-RUN mvn clean
+RUN mvn clean package
 
 #
 # Package stage
 #
-#FROM maven:3.8.3-openjdk-17
-#WORKDIR C:/Users/User/Desktop/Iniciação Científica/systempus/systempus/backend/systempus
-#COPY --from=build /systempus/*.jar /systempus/systempus.jar
-#EXPOSE 8080
-#ENTRYPOINT ["java","-jar","app.jar"]
+FROM openjdk:17-alpine
+COPY --from=build /systempus/target/systempus.jar systempus.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","systempus.jar"]
