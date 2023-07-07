@@ -40,6 +40,7 @@ public class CoordenadorController {
     }
 
     @GetMapping
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<Coordenador>> getAll(){
         return ResponseEntity.ok().body(coordenadorService.getAll());
     }
