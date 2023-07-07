@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @SpringBootApplication
 @OpenAPIDefinition(info = @Info(title = "Systempus API", version = "1.0.0"),
-servers = {@Server(url = "https://systempus.up.railway.app/"), @Server(url = "https://systempus.onrender.com/")},
+servers = {@Server(url = "https://systempus.onrender.com/")},
 tags = {
 	@Tag(name = "Coordenador", description = "Descrição"),
 	@Tag(name = "Professor", description = "TesteProfessor"),
