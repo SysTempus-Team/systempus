@@ -23,7 +23,6 @@ tags = {
 
 )
 public class SystempusApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(SystempusApplication.class, args);
 	}
