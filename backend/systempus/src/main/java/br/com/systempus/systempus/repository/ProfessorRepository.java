@@ -8,6 +8,6 @@ import br.com.systempus.systempus.domain.Professor;
 
 public interface ProfessorRepository extends JpaRepository<Professor, Integer>{
 
-    @Query(value = "SELECT COUNT(*) > 0 FROM tb_profissional WHERE cpf = :cpf", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) > 0 FROM profissional WHERE cpf = :cpf", nativeQuery = true)
     boolean existsByCPF(@Param("cpf")String cpf);
 }

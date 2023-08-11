@@ -10,6 +10,6 @@ import br.com.systempus.systempus.domain.Coordenador;
 @Repository
 public interface CoordenadorRepository extends JpaRepository<Coordenador, Integer>{
 
-    @Query(value = "SELECT COUNT(*) > 0 FROM tb_profissional WHERE cpf = :cpf", nativeQuery = true)
+    @Query(value = "SELECT COUNT(*) > 0 FROM profissional WHERE cpf = :cpf", nativeQuery = true)
     boolean existsByCPF(@Param("cpf") String cpf);
 }

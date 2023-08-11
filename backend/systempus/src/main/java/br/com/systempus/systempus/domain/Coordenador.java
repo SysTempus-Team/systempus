@@ -2,31 +2,24 @@ package br.com.systempus.systempus.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.DiscriminatorValue;
 
 @Entity
-@Table(name = "tb_coordenador")
+@Table(name = "coordenador")
+@DiscriminatorValue("1")
 public class Coordenador extends Profissional{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @OneToMany
+    @JsonIgnoreProperties({"modulos", "coordenador"})
+    //@JsonManagedReference(value = "curso_coordenador")
+    @OneToMany(mappedBy = "coordenador")
     private List<Curso> cursos;
-
-    public void setId(Integer id){
-        this.id = id;
-    }
-
-    public Integer getId(){
-        return id;
-    }
 
     public void setCursos(List<Curso> cursos){
         this.cursos = cursos;

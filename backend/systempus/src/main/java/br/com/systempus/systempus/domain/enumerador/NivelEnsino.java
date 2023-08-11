@@ -4,6 +4,8 @@ package br.com.systempus.systempus.domain.enumerador;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
+import br.com.systempus.systempus.error.NotFoundException;
+
 public enum NivelEnsino {
 
     INFANTIL(0, "Infantil"),
@@ -20,24 +22,22 @@ public enum NivelEnsino {
         this.nome = nome;
     }
 
+    @JsonValue
     public int getValue(){
         return value;
     }
-    @JsonValue
+    
     public String getNome(){
         return nome;
     }
 
     @JsonCreator
     public static NivelEnsino toEnum(Integer codigo){
-      
         for( NivelEnsino nivelEnsino : NivelEnsino.values()){
             if(codigo == nivelEnsino.getValue()){
                 return nivelEnsino;
             }
         }
-        return null;
+        throw new NotFoundException("Valor não encontrado da Nível de Ensino " + codigo);
     }
-
-
 }

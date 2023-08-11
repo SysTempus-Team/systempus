@@ -31,9 +31,11 @@ public class DisciplinaService implements IDisciplinaService{
     }
 
     public void save(Disciplina disciplina){
-        if (disciplina.getId() == null)
+        if (disciplina.getId() == null){
             repository.save(disciplina);
-        throw new IllegalStateException(Disciplina.class.getSimpleName().toString());
+        }else{
+            throw new IllegalStateException(Disciplina.class.getSimpleName().toString());
+        }
     }
 
     public void delete(Integer id){

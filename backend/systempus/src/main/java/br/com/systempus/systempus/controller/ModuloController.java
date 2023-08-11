@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.systempus.systempus.domain.Modulo;
 import br.com.systempus.systempus.services.ModuloService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/v1/modulo")
+@Tag(name = "Modulo")
 public class ModuloController {
 
     @Autowired

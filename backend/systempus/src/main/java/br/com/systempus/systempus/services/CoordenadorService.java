@@ -51,6 +51,7 @@ public class CoordenadorService implements ICoordenadorService{
         }
     }
 
+
     public void update(Coordenador coordenador) {
 
         if (!repository.existsById(coordenador.getId()))
@@ -66,6 +67,7 @@ public class CoordenadorService implements ICoordenadorService{
         repository.saveAndFlush(coordenadorExistente);
 
     }
+
 
     public Coordenador updatePartial(Map<String, Object> mapValores, Integer id) {
 

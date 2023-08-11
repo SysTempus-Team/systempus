@@ -19,11 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.systempus.systempus.domain.Professor;
 import br.com.systempus.systempus.services.ProfessorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("api/v1/professor")
+@Tag(name = "Professor")
 public class ProfessorController {
 
     @Autowired

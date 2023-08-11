@@ -2,6 +2,7 @@ package br.com.systempus.systempus.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,12 +20,15 @@ import java.util.Map;
 
 import br.com.systempus.systempus.domain.Coordenador;
 import br.com.systempus.systempus.services.interfaces.ICoordenadorService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/coordenador")
+@Tag(name = "Coordenador")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class CoordenadorController {
 
     @Autowired
@@ -36,6 +40,7 @@ public class CoordenadorController {
     }
 
     @GetMapping
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
     public ResponseEntity<List<Coordenador>> getAll(){
         return ResponseEntity.ok().body(coordenadorService.getAll());
     }

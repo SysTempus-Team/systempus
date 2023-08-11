@@ -19,12 +19,14 @@ import java.util.Map;
 
 import br.com.systempus.systempus.domain.Curso;
 import br.com.systempus.systempus.services.CursoService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("api/v1/curso")
+@Tag(name = "Curso")
 public class CursoController {
 
     @Autowired

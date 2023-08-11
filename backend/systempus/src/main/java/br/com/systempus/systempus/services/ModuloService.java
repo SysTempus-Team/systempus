@@ -1,6 +1,8 @@
 package br.com.systempus.systempus.services;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -31,9 +33,11 @@ public class ModuloService implements IModuloService{
     }
 
     public void save(Modulo modulo){
-        if (modulo.getId() == null)
+        if (modulo.getId() == null){
             repository.save(modulo);
-        throw new IllegalStateException(Modulo.class.getSimpleName().toString());
+        }else{
+            throw new IllegalStateException(Modulo.class.getSimpleName().toString());
+        }
     }
 
     public void delete(Integer id){
@@ -68,7 +72,12 @@ public class ModuloService implements IModuloService{
                 (campo, valor)->{
                     Field field = ReflectionUtils.findField(Modulo.class, campo);
                     field.setAccessible(true);
-                    ReflectionUtils.setField(field, moduloExistente, valor);
+                    if (field.getType().equals(LocalDate.class) && valor instanceof String){
+                        LocalDate valorConvertido = LocalDate.parse((String) valor, DateTimeFormatter.ISO_DATE);
+                        ReflectionUtils.setField(field, moduloExistente, valorConvertido);
+                    }else{
+                        ReflectionUtils.setField(field, moduloExistente, valor);
+                    }
                 }
             );
 
