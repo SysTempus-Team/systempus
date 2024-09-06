@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
@@ -37,11 +38,12 @@ public class Disciplina {
     @JoinColumn(name = "id_modulo")
     private Modulo modulo;
 
-/*
-    public Disciplina(Integer id, String nome){
-        this.id = id;
-        this.nome = nome;
-    }*/
+    @JsonIgnore
+    @OneToMany(mappedBy = "disciplina")
+    private List<HorarioDisciplina> horarioDisciplina;
+
+    public Disciplina() {
+    }
 
     public void setId(Integer id) {
         this.id = id;
@@ -75,6 +77,14 @@ public class Disciplina {
 
     public List<Professor> getProfessores() {
         return professores;
+    }
+
+    public List<HorarioDisciplina> getHorarioDisciplina() {
+        return horarioDisciplina;
+    }
+
+    public void setHorarioDisciplina(List<HorarioDisciplina> horarioDisciplina) {
+        this.horarioDisciplina = horarioDisciplina;
     }
 
 }

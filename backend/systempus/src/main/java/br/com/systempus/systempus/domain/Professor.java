@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.DiscriminatorValue;
 
@@ -32,6 +33,9 @@ public class Professor extends Profissional{
     @JoinTable(name="professor_disciplina", joinColumns = @JoinColumn(name="id_professor"),
     inverseJoinColumns = @JoinColumn(name="id_disciplina"))
     private List<Disciplina> disciplinas;
+
+    @OneToMany(mappedBy = "professor")
+    private List<DisponibilidadeProfessor> disponibilidadeProfessor;
 
     public Professor(){
 

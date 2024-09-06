@@ -57,13 +57,16 @@ public class Curso {
     @JsonIgnoreProperties("cursos")
     //@JsonBackReference(value = "curso_coordenador")
     @ManyToOne
-    @JoinColumn(name = "id_coordenador")
+    @JoinColumn(name = "id_coordenador", nullable = true)
     private Coordenador coordenador;
 
     @JsonIgnore
     //@JsonBackReference(value = "professores_cursos")
     @ManyToMany (mappedBy = "cursos")
     private List<Professor> professores;
+
+    @OneToMany(mappedBy = "curso")
+    private List<Periodo> periodos;
 
     public void setModalidade(Modalidade modalidade){
         this.modalidade = modalidade;
@@ -138,12 +141,22 @@ public class Curso {
         return professores;
     }
 
+    public List<Periodo> getPeriodos() {
+        return periodos;
+    }
+
+    public void setPeriodos(List<Periodo> periodos) {
+        this.periodos = periodos;
+    }
+    
+
     @Override
     public String toString() {
         return "Curso [id=" + id + ", nome=" + nome + ", nivelEnsino=" + nivelEnsino + ", qtdPeriodos=" + qtdPeriodos
                 + ", modalidade=" + modalidade + ", cargaTotal=" + cargaTotal + ", modulo=" + modulos
                 + ", coordenador=" + coordenador + "]";
     }
+
 
     
 }

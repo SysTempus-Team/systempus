@@ -2,13 +2,12 @@ package br.com.systempus.systempus.domain;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PreRemove;
 import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorValue;
 
 @Entity
@@ -17,8 +16,7 @@ import jakarta.persistence.DiscriminatorValue;
 public class Coordenador extends Profissional{
 
     @JsonIgnoreProperties({"modulos", "coordenador"})
-    //@JsonManagedReference(value = "curso_coordenador")
-    @OneToMany(mappedBy = "coordenador")
+    @OneToMany(mappedBy = "coordenador"/* , cascade = CascadeType.ALL*/)
     private List<Curso> cursos;
 
     public void setCursos(List<Curso> cursos){
@@ -27,5 +25,12 @@ public class Coordenador extends Profissional{
 
     public List<Curso> getCursos(){
         return cursos;
+    }
+
+    @PreRemove
+    private void preRemove() {
+        for (Curso curso : cursos) {
+            curso.setCoordenador(null);
+        }
     }
 }

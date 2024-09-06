@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import br.com.systempus.systempus.domain.Disciplina;
 import br.com.systempus.systempus.domain.Modulo;
 import br.com.systempus.systempus.services.ModuloService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,6 +28,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("api/v1/modulo")
 @Tag(name = "Modulo")
+@CrossOrigin(origins = ("*"), allowedHeaders = ("*"))
 public class ModuloController {
 
     @Autowired
@@ -38,12 +40,12 @@ public class ModuloController {
         return ResponseEntity.ok().body(service.getOne(id));
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<Modulo>> getAll(){
         return ResponseEntity.ok().body(service.getAll());
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<Modulo> save(@RequestBody Modulo modulo, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
         service.save(modulo);
 
@@ -64,7 +66,7 @@ public class ModuloController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<Modulo> update(@RequestBody Modulo modulo){
         service.update(modulo);
         return ResponseEntity.ok().body(modulo);
@@ -73,6 +75,12 @@ public class ModuloController {
     @PatchMapping("/{id}")
     public ResponseEntity<Modulo> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
         Modulo moduloAtualizado = service.updatePartial(mapValores, id);
+        return ResponseEntity.ok().body(moduloAtualizado);
+    }
+
+    @PatchMapping("/disciplina/{idModulo}")
+    public ResponseEntity<Modulo> adicionarDisciplina(@PathVariable Integer idModulo, @RequestBody Disciplina disciplina){
+        Modulo moduloAtualizado = service.adicionarDisicplinas(idModulo, disciplina);
         return ResponseEntity.ok().body(moduloAtualizado);
     }
 }

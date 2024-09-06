@@ -19,74 +19,72 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.systempus.systempus.domain.Curso;
-import br.com.systempus.systempus.domain.Disciplina;
+import br.com.systempus.systempus.domain.Periodo;
 import br.com.systempus.systempus.domain.Modulo;
-import br.com.systempus.systempus.services.DisciplinaService;
+import br.com.systempus.systempus.services.PeriodoService;
 import br.com.systempus.systempus.services.ModuloService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("api/v1/disciplina/")
-@Tag(name = "Disciplina")
+@RequestMapping("api/v1/periodo/")
+@Tag(name = "Periodo")
 @CrossOrigin(origins = ("*"), allowedHeaders = ("*"))
-public class DisciplinaController {
+public class PeriodoController {
 
     @Autowired
-    private DisciplinaService service;
-
-    @Autowired
-    private ModuloService moduloService;
+    private PeriodoService service;
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Disciplina> getOne(@PathVariable Integer id){
+    public ResponseEntity<Periodo> getOne(@PathVariable Integer id){
         return ResponseEntity.ok().body(service.getOne(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<Disciplina>> getAll(){
+    public ResponseEntity<List<Periodo>> getAll(){
         return ResponseEntity.ok().body(service.getAll());
     }
 
-    @PostMapping
-    public ResponseEntity<Disciplina> save(@RequestBody Disciplina disciplina, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
-        service.save(disciplina);
+    @PostMapping("{idCurso}")
+    public ResponseEntity<Periodo> save(@RequestBody Periodo periodo, @PathVariable Integer idCurso, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        service.save(periodo, idCurso);
 
         StringBuffer path = new StringBuffer();
 
         path.append(request.getRequestURI())
             .append("/")
-            .append(disciplina.getId());
+            .append(periodo.getId());
 
 
         URI uri = new URI(path.toString());
 
-        return ResponseEntity.created(uri).body(disciplina);
+        return ResponseEntity.created(uri).body(periodo);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Disciplina> delete(@PathVariable Integer id){
+    public ResponseEntity<Periodo> delete(@PathVariable Integer id){
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
-    public ResponseEntity<Disciplina> update(@RequestBody Disciplina disciplina){
-        service.update(disciplina);
-        return ResponseEntity.ok().body(disciplina);
+    @PutMapping("{id}")
+    public ResponseEntity<Periodo> update(@RequestBody Periodo periodo, @PathVariable Integer id){
+        service.update(periodo, id);
+        return ResponseEntity.ok().body(periodo);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Disciplina> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
-        Disciplina disciplinaAtualizada = service.updatePartial(mapValores, id);
-        return ResponseEntity.ok().body(disciplinaAtualizada);
+    public ResponseEntity<Periodo> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
+        Periodo periodoAtualizada = service.updatePartial(mapValores, id);
+        return ResponseEntity.ok().body(periodoAtualizada);
     }
 
     @GetMapping("curso/{idCurso}")
-    public ResponseEntity<List<Disciplina>> getByCurso(@PathVariable Integer idCurso){
-        return ResponseEntity.ok().body(service.getByCurso(idCurso));
+    public ResponseEntity<List<Periodo>> getPeriodosByCurso(@PathVariable Integer idCurso){
+        List<Periodo> periodos = service.getPeriodosByCurso(idCurso);
+        return ResponseEntity.ok().body(periodos);
     }
 
 }

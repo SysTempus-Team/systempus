@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import br.com.systempus.systempus.domain.Curso;
+import br.com.systempus.systempus.domain.Disciplina;
 import br.com.systempus.systempus.domain.Modulo;
 import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
+import br.com.systempus.systempus.repository.DisciplinaRepository;
 import br.com.systempus.systempus.repository.ModuloRepository;
 import br.com.systempus.systempus.services.interfaces.IModuloService;
 
@@ -21,6 +24,9 @@ public class ModuloService implements IModuloService{
 
     @Autowired
     private ModuloRepository repository;
+
+    @Autowired
+    private DisciplinaRepository disciplinaRepository;
 
     public List<Modulo> getAll(){
         List<Modulo> resultado = repository.findAll();
@@ -52,7 +58,7 @@ public class ModuloService implements IModuloService{
         if(repository.existsById(modulo.getId())){
             Modulo moduloExistente = repository.findById(modulo.getId()).get();
 
-            moduloExistente.setNumero(modulo.getNumero());
+            moduloExistente.setNome(modulo.getNome());
             moduloExistente.setDataInicio(modulo.getDataInicio());
             moduloExistente.setDataFim(modulo.getDataFim());
             moduloExistente.setCurso(modulo.getCurso());
@@ -87,4 +93,14 @@ public class ModuloService implements IModuloService{
             throw new NotFoundException(Modulo.class.getSimpleName().toString(), id);
         }
     }
+
+    public Modulo adicionarDisicplinas(Integer idModulo, Disciplina disciplina){
+        Modulo modulo = repository.findById(idModulo).get();
+        disciplina.setModulo(modulo);
+        
+        disciplinaRepository.save(disciplina);
+
+        return repository.findById(idModulo).get();
+    }
+    
 }

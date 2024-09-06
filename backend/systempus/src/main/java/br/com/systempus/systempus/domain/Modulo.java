@@ -29,7 +29,7 @@ public class Modulo {
     private Integer id;
 
     @NotNull(message = "Campo Obrigatório")
-    private Integer numero;
+    private String nome;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataInicio;
@@ -55,12 +55,12 @@ public class Modulo {
         return id;
     }
 
-    public void setNumero(Integer numero) {
-        this.numero = numero;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public Integer getNumero() {
-        return numero;
+    public String getNome() {
+        return nome;
     }
 
     public void setDataInicio(LocalDate dataInicio) {
