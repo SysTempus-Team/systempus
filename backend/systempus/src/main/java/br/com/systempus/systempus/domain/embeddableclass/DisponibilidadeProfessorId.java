@@ -1,6 +1,5 @@
 package br.com.systempus.systempus.domain.embeddableclass;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
@@ -8,6 +7,9 @@ public class DisponibilidadeProfessorId {
     
     private Integer horarioAulaId;
     private Integer professorId;
+
+    public DisponibilidadeProfessorId() {
+    }
 
     public DisponibilidadeProfessorId(Integer horarioAulaId, Integer professorId) {
         this.horarioAulaId = horarioAulaId;

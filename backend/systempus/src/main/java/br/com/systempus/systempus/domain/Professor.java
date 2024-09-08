@@ -2,10 +2,11 @@ package br.com.systempus.systempus.domain;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -19,19 +20,18 @@ import jakarta.persistence.DiscriminatorValue;
 @Entity
 @Table(name = "professor")
 @DiscriminatorValue("2")
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Professor extends Profissional{
 
-    @JsonIgnoreProperties({"modulos", "coordenador"})
-    //@JsonManagedReference(value = "professores_cursos")
     @ManyToMany
-    @JoinTable(name = "professor_curso", joinColumns = @JoinColumn(name = "id_professor"),
-    inverseJoinColumns = @JoinColumn(name = "id_curso"))
+    @JoinTable(name = "professor_curso", joinColumns = @JoinColumn(name = "professor_id"),
+    inverseJoinColumns = @JoinColumn(name = "curso_id"))
     private List<Curso> cursos;
 
-    //@JsonManagedReference(value = "disciplinas_professores")
+    
     @ManyToMany
-    @JoinTable(name="professor_disciplina", joinColumns = @JoinColumn(name="id_professor"),
-    inverseJoinColumns = @JoinColumn(name="id_disciplina"))
+    @JoinTable(name="professor_disciplina", joinColumns = @JoinColumn(name="professor_id"),
+    inverseJoinColumns = @JoinColumn(name="disciplina_id"))
     private List<Disciplina> disciplinas;
 
     @OneToMany(mappedBy = "professor")

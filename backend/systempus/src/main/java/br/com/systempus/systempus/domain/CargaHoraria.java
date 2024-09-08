@@ -1,7 +1,9 @@
 package br.com.systempus.systempus.domain;
 
-import java.time.LocalTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,8 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,10 +27,12 @@ public class CargaHoraria {
     private Integer cargaHoraria;
 
     @OneToMany(mappedBy = "cargaHoraria")
-    private List<HorarioAula> horarioAula;
+    @JsonBackReference(value = "horarios_aula_carga_horaria")
+    private List<HorarioAula> horariosAula;
 
-    @OneToOne
-    @JoinColumn(name = "id_instituicao")
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "instituicao_id")
     private Instituicao instituicao;
 
     public CargaHoraria(Integer id, Instituicao instituicao) {
@@ -54,12 +58,12 @@ public class CargaHoraria {
     public void setInstituicao(Instituicao instituicao) {
         this.instituicao = instituicao;
     }
-    public List<HorarioAula> getHorarioAula() {
-        return horarioAula;
+    public List<HorarioAula> getHorariosAula() {
+        return horariosAula;
     }
 
-    public void setHorarioAula(List<HorarioAula> horarioAula) {
-        this.horarioAula = horarioAula;
+    public void setHorarioAula(List<HorarioAula> horariosAula) {
+        this.horariosAula = horariosAula;
     }
 
     public Integer getCargaHoraria() {

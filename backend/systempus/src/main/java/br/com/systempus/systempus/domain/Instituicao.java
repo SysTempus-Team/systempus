@@ -2,15 +2,16 @@ package br.com.systempus.systempus.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
@@ -28,18 +29,20 @@ public class Instituicao {
     private String cnpj;
 
     @OneToMany(mappedBy = "instituicao")
-    private List<Periodo> periodo;
+    @JsonBackReference(value = "instituicao_periodo")
+    private List<Periodo> periodos;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "instituicao")
     private List<CargaHoraria> cargasHorarias;
 
     public Instituicao(){}
 
-    public Instituicao(Integer id, String nome, String cnpj, List<Periodo> periodo) {
+    public Instituicao(Integer id, String nome, String cnpj, List<Periodo> periodos) {
         this.id = id;
         this.nome = nome;
         this.cnpj = cnpj;
-        this.periodo = periodo;
+        this.periodos = periodos;
     }
 
     public String getNome() {
@@ -59,11 +62,11 @@ public class Instituicao {
     }
 
     public List<Periodo> getPeriodos() {
-        return periodo;
+        return periodos;
     }
 
     public void setPeriodos(List<Periodo> periodos) {
-        this.periodo = periodos;
+        this.periodos = periodos;
     }
 
     public Integer getId() {

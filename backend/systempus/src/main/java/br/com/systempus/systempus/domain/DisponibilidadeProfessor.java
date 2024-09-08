@@ -2,22 +2,17 @@ package br.com.systempus.systempus.domain;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import br.com.systempus.systempus.domain.embeddableclass.DisponibilidadeProfessorId;
-import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinColumns;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Table(name = "disponibilidade_professor")
@@ -27,23 +22,23 @@ public class DisponibilidadeProfessor {
     private DisponibilidadeProfessorId id;
 
     @ManyToOne
+    @MapsId("professorId")
+    @JoinColumn(name = "professor_id")
+    @JsonBackReference
+    private Professor professor;
+    
+    @ManyToOne
     @MapsId("horarioAulaId")
+    @JoinColumn(name = "horario_aula_id")
+    @JsonBackReference
     private HorarioAula horarioAula;
 
-    @ManyToOne
-    @MapsId("professorId")
-    private Professor professor;
-
-    @ManyToMany
-    @JoinTable(name = "horario_docente")
-    @JoinColumn(name = "id_periodo", referencedColumnName = "id_periodo")
-    @JoinColumn(name = "id_carga_horaria", referencedColumnName = "id_carga_horaria")
-    private List<HorarioDisciplina> horariosDisciplina;
+    @OneToMany(mappedBy = "disponibilidadeProfessor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HorarioDocente> horariosDocente;
 
     public DisponibilidadeProfessor(DisponibilidadeProfessorId id, Integer idHorarioAula, Integer idProfessor,
             List<HorarioDisciplina> horariosDisciplina) {
         this.id = id;
-        // this.horariosDisciplina = horariosDisciplina;
     }
 
     public DisponibilidadeProfessor() {
@@ -71,14 +66,6 @@ public class DisponibilidadeProfessor {
 
     public void setProfessor(Professor professor) {
         this.professor = professor;
-    }
-
-    public List<HorarioDisciplina> getHorariosDisciplina() {
-        return horariosDisciplina;
-    }
-
-    public void setHorariosDisciplina(List<HorarioDisciplina> horariosDisciplina) {
-        this.horariosDisciplina = horariosDisciplina;
     }
 
 }

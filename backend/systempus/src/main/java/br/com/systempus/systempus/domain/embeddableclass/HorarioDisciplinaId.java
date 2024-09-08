@@ -1,18 +1,20 @@
 package br.com.systempus.systempus.domain.embeddableclass;
 
-import br.com.systempus.systempus.domain.Disciplina;
-import br.com.systempus.systempus.domain.HorarioAula;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class HorarioDisciplinaId {
     
-    // @Column
-    private HorarioAulaId horarioAulaId;
-
-    // @Column(name = "id_disciplina")
+    private Integer horarioAulaId;
     private Integer disciplinaId;
+
+    public Integer getHorarioAulaId() {
+        return horarioAulaId;
+    }
+
+    public void setHorarioAulaId(Integer horarioAulaId) {
+        this.horarioAulaId = horarioAulaId;
+    }
 
     public Integer getDisciplinaId() {
         return disciplinaId;
@@ -22,11 +24,5 @@ public class HorarioDisciplinaId {
         this.disciplinaId = disciplinaId;
     }
 
-    public HorarioAulaId getHorarioAulaId() {
-        return horarioAulaId;
-    }
 
-    public void setHorarioAulaId(HorarioAulaId horarioAulaId) {
-        this.horarioAulaId = horarioAulaId;
-    }
 }

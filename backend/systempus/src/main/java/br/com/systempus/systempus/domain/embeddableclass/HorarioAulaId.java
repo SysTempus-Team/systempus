@@ -1,15 +1,12 @@
 package br.com.systempus.systempus.domain.embeddableclass;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class HorarioAulaId {
     
-    // @Column(name = "id_carga_horaria")
     private Integer cargaHorariaId;
    
-    // @Column(name = "id_periodo")
     private Integer periodoId;
 
     public HorarioAulaId(Integer cargaHorariaId, Integer periodoId) {

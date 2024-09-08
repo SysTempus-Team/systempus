@@ -3,8 +3,9 @@ package br.com.systempus.systempus.domain;
 import java.time.LocalTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.systempus.systempus.domain.enumerador.Turno;
 import jakarta.persistence.Column;
@@ -44,18 +45,12 @@ public class Periodo {
     private LocalTime fimHorario;
 
     @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "id_curso")
-    private Curso curso;
-
-    @ManyToOne
-    @JoinColumn(name = "id_instituicao")
-    @JsonIgnore
+    @JoinColumn(name = "instituicao_id")
     private Instituicao instituicao;
 
-    @OneToMany(mappedBy = "periodo")
-    @JsonIgnore
-    private List<HorarioAula> horarioAula;
+    @OneToMany
+    @JoinColumn(name = "periodo_id")
+    private List<HorarioAula> horariosAula;
 
     public Periodo(){}
 
@@ -67,7 +62,7 @@ public class Periodo {
         this.fimIntervalo = fimIntervalo;
         this.inicioHorario = inicioHorario;
         this.fimHorario = fimHorario;
-        this.curso = curso;
+        // this.curso = curso;
         this.instituicao = instituicao;
     }
 
@@ -87,13 +82,13 @@ public class Periodo {
         this.id = id;
     }
     
-    public Curso getCurso() {
-        return curso;
-    }
+    // public Curso getCurso() {
+    //     return curso;
+    // }
 
-    public void setCurso(Curso curso) {
-        this.curso = curso;
-    }
+    // public void setCurso(Curso curso) {
+    //     this.curso = curso;
+    // }
 
     public LocalTime getInicioIntervalo() {
         return inicioIntervalo;
@@ -127,12 +122,12 @@ public class Periodo {
         this.fimHorario = fimHorario;
     }
 
-    public List<HorarioAula> getHorarioAula() {
-        return horarioAula;
+    public List<HorarioAula> getHorariosAula() {
+        return horariosAula;
     }
 
-    public void setHorarioAula(List<HorarioAula> horarioAula) {
-        this.horarioAula = horarioAula;
+    public void setHorariosAula(List<HorarioAula> horariosAula) {
+        this.horariosAula = horariosAula;
     }
 
     public Turno getTurno() {

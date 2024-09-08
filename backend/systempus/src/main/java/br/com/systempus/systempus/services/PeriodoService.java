@@ -59,8 +59,8 @@ public class PeriodoService {
             Curso cursoExistente = cursoRepository.findById(idCurso).get();
             
             if (validarHorarios(periodo)){
-                periodo.setCurso(cursoExistente);
-                turnoCadastrado(periodo);
+                // periodo.setCurso(cursoExistente);
+                // turnoCadastrado(periodo);
                 repository.save(periodo);
             }else{
                 throw new DataIntegrityViolationException("Os valores dos períodos precisam condizer com a carga horária de " + cargarHoraria.getCargaHoraria() + " minutos da instituição");
@@ -90,9 +90,9 @@ public class PeriodoService {
             if (validarHorarios(periodo)){
                 
                 Periodo periodoExistente = repository.findById(id).get();
-                periodo.setCurso(periodoExistente.getCurso());
+                // periodo.setCurso(periodoExistente.getCurso());
 
-                turnoCadastrado(periodo);
+                // turnoCadastrado(periodo);
                 
                 periodoExistente.setTurno(periodo.getTurno());
                 periodoExistente.setInicioIntervalo(periodo.getInicioIntervalo());
@@ -158,16 +158,16 @@ public class PeriodoService {
         }
     }
 
-    private void turnoCadastrado(Periodo periodo){
-        List<Periodo> periodos = repository.findAllByCurso(periodo.getCurso());
+    // private void turnoCadastrado(Periodo periodo){
+    //     List<Periodo> periodos = repository.findAllByCurso(periodo.getCurso());
 
-        for (Periodo p : periodos){
-            if (p.getTurno() == periodo.getTurno()){
-                throw new DataIntegrityViolationException(DataIntegrityViolationException.turnoAlreadyExists(periodo.getTurno().getTurno(), periodo.getCurso().getNome()));
-            }
-        }
+    //     for (Periodo p : periodos){
+    //         if (p.getTurno() == periodo.getTurno()){
+    //             throw new DataIntegrityViolationException(DataIntegrityViolationException.turnoAlreadyExists(periodo.getTurno().getTurno(), periodo.getCurso().getNome()));
+    //         }
+    //     }
 
-    }
+    // }
 
     private Boolean validarTurnoHorario(Periodo periodo){
         LocalTime horarioInicio = periodo.getInicioHorario();

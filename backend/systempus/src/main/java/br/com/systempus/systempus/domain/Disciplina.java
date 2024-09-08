@@ -3,7 +3,9 @@ package br.com.systempus.systempus.domain;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,6 +20,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "disciplina")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Disciplina {
 
     @Id
@@ -27,19 +30,17 @@ public class Disciplina {
     @NotNull(message = "Campo Obrigatório")
     private String nome;
 
-    @JsonIgnore
-    //@JsonBackReference(value = "disciplinas_professores")
+
     @ManyToMany(mappedBy = "disciplinas")
     private List<Professor> professores;
 
-    @JsonIgnore
-    //@JsonBackReference(value = "disciplina_modulo")
+    @JsonBackReference(value = "disciplina_modulo")
     @ManyToOne
-    @JoinColumn(name = "id_modulo")
+    @JoinColumn(name = "modulo_id")
     private Modulo modulo;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "disciplina")
+    @JsonBackReference
     private List<HorarioDisciplina> horarioDisciplina;
 
     public Disciplina() {

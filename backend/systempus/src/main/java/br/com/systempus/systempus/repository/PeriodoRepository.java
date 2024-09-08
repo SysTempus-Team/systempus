@@ -10,6 +10,6 @@ import br.com.systempus.systempus.domain.enumerador.Turno;
 
 public interface PeriodoRepository extends JpaRepository<Periodo, Integer> {
 
-    List<Periodo> findAllByCurso(Curso curso);
+    // List<Periodo> findAllByCurso(Curso curso);
 
 }
