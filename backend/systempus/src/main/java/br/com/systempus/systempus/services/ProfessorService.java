@@ -35,7 +35,7 @@ public class ProfessorService implements IProfessorService{
             if (!repository.existsByCPF(professor.getCpf())){
                 repository.save(professor);
             }else{
-                throw new DataIntegrityViolationException(professor.getCpf());
+                throw new DataIntegrityViolationException(DataIntegrityViolationException.cpfExists(professor.getCpf()));
             }
         }else{
             throw new IllegalStateException(Professor.class.getSimpleName().toString());
@@ -59,6 +59,9 @@ public class ProfessorService implements IProfessorService{
             professorExistente.setTelefone(professor.getTelefone());
             professorExistente.setDisciplinas(professor.getDisciplinas());
             professorExistente.setCursos(professor.getCursos());
+            professorExistente.setStatus(professor.getStatus());
+            professorExistente.setEmail(professor.getEmail());
+            professorExistente.setFoto(professor.getFoto());
 
             repository.saveAndFlush(professorExistente);
         }else{

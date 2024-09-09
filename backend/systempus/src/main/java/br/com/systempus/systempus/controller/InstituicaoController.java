@@ -18,61 +18,61 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 
-import br.com.systempus.systempus.domain.Coordenador;
-import br.com.systempus.systempus.services.interfaces.ICoordenadorService;
+import br.com.systempus.systempus.domain.Instituicao;
+import br.com.systempus.systempus.services.InstituicaoService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("api/v1/coordenador/")
-@Tag(name = "Coordenador")
+@RequestMapping("api/v1/instituicao/")
+@Tag(name = "Instituição")
 @CrossOrigin(origins = ("*"), allowedHeaders = ("*"))
-public class CoordenadorController {
+public class InstituicaoController {
 
     @Autowired
-    private ICoordenadorService coordenadorService;
+    private InstituicaoService service;
 
     @GetMapping("{id}")
-    public ResponseEntity<Coordenador> getOne(@PathVariable Integer id){
-        return ResponseEntity.ok().body(coordenadorService.getOne(id));
+    public ResponseEntity<Instituicao> getOne(@PathVariable Integer id){
+        return ResponseEntity.ok().body(service.getOne(id));
     }
 
     @GetMapping
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public ResponseEntity<List<Coordenador>> getAll(){
-        return ResponseEntity.ok().body(coordenadorService.getAll());
+    public ResponseEntity<List<Instituicao>> getAll(){
+        return ResponseEntity.ok().body(service.getAll());
     }
 
     @PostMapping
-    public ResponseEntity<Coordenador> save(@Valid @RequestBody Coordenador coordenador, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
-        coordenadorService.save(coordenador);
+    public ResponseEntity<Instituicao> save(@Valid @RequestBody Instituicao instituicao, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        service.save(instituicao);
 
         StringBuffer path = new StringBuffer();
         path.append(request.getRequestURI())
             .append("/")
-            .append(coordenador.getId());
+            .append(instituicao.getId());
 
         URI uri = new URI(path.toString());
-        return ResponseEntity.created(uri).body(coordenador);
+        return ResponseEntity.created(uri).body(instituicao);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Coordenador> delete(@PathVariable Integer id){
-        coordenadorService.delete(id);
+    public ResponseEntity<Instituicao> delete(@PathVariable Integer id){
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping
-    public ResponseEntity<Coordenador> update(@RequestBody Coordenador coordenador){
-        coordenadorService.update(coordenador);
-        return ResponseEntity.ok().body(coordenador);
+    public ResponseEntity<Instituicao> update(@RequestBody Instituicao instituicao){
+        service.update(instituicao);
+        return ResponseEntity.ok().body(instituicao);
     }
 
     @PatchMapping("{id}")
-    public ResponseEntity<Coordenador> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
-        Coordenador coordenaAtualizado = coordenadorService.updatePartial(mapValores, id);
+    public ResponseEntity<Instituicao> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
+        Instituicao coordenaAtualizado = service.updatePartial(mapValores, id);
         return ResponseEntity.ok().body(coordenaAtualizado);
     }
 }

@@ -7,15 +7,24 @@ import java.lang.NoSuchMethodException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import br.com.systempus.systempus.domain.Coordenador;
 import br.com.systempus.systempus.domain.Curso;
+import br.com.systempus.systempus.domain.Modulo;
+import br.com.systempus.systempus.domain.Periodo;
+import br.com.systempus.systempus.domain.enumerador.Modalidade;
+import br.com.systempus.systempus.domain.enumerador.NivelEnsino;
 import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
+import br.com.systempus.systempus.repository.CoordenadorRepository;
 import br.com.systempus.systempus.repository.CursoRepository;
+import br.com.systempus.systempus.repository.ModuloRepository;
+import br.com.systempus.systempus.repository.PeriodoRepository;
 import br.com.systempus.systempus.services.interfaces.ICursoService;
 
 @Service
@@ -23,6 +32,15 @@ public class CursoService implements ICursoService {
 
     @Autowired//Instanciação automática
     private CursoRepository repository;
+
+    @Autowired//Instanciação automática
+    private CoordenadorRepository coordenadorRepository;
+
+    @Autowired
+    private ModuloRepository moduloRepository;
+
+    @Autowired
+    private PeriodoRepository periodoRepository;
 
     public List<Curso> getAll() {
         List<Curso> resultado = repository.findAll();
@@ -116,5 +134,15 @@ public class CursoService implements ICursoService {
             throw new NotFoundException(Curso.class.getSimpleName().toString(), id);
         }
     }
+
+    public Curso adicionarModulo(Integer idCurso, Modulo modulo){
+        Curso curso = repository.findById(idCurso).get();
+        modulo.setCurso(curso);
+
+        Modulo moduloNovo = moduloRepository.save(modulo);
+
+        return repository.findById(idCurso).get();
+    }
+
 
 }

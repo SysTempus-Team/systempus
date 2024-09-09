@@ -3,9 +3,10 @@ package br.com.systempus.systempus.domain;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import br.com.systempus.systempus.domain.enumerador.Modalidade;
 import br.com.systempus.systempus.domain.enumerador.NivelEnsino;
@@ -16,7 +17,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -25,6 +25,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "curso")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Curso {
 
     @Id
@@ -49,21 +50,21 @@ public class Curso {
 
     public Curso(){}
 
-    //@JsonManagedReference(value = "curso_modulos")
-    @JsonIgnoreProperties("disciplinas")
+    @JsonManagedReference(value = "curso_modulos")
     @OneToMany(mappedBy = "curso")
     private List<Modulo> modulos;
 
-    @JsonIgnoreProperties("cursos")
-    //@JsonBackReference(value = "curso_coordenador")
+    @JsonBackReference(value = "curso_coordenador")
     @ManyToOne
-    @JoinColumn(name = "id_coordenador")
+    @JoinColumn(name = "coordenador_id", nullable = true)
     private Coordenador coordenador;
 
-    @JsonIgnore
-    //@JsonBackReference(value = "professores_cursos")
     @ManyToMany (mappedBy = "cursos")
     private List<Professor> professores;
+
+    @OneToMany
+    @JoinColumn(name = "id")
+    private List<Periodo> periodos;
 
     public void setModalidade(Modalidade modalidade){
         this.modalidade = modalidade;
@@ -138,12 +139,22 @@ public class Curso {
         return professores;
     }
 
+    public List<Periodo> getPeriodos() {
+        return periodos;
+    }
+
+    public void setPeriodos(List<Periodo> periodos) {
+        this.periodos = periodos;
+    }
+    
+
     @Override
     public String toString() {
         return "Curso [id=" + id + ", nome=" + nome + ", nivelEnsino=" + nivelEnsino + ", qtdPeriodos=" + qtdPeriodos
                 + ", modalidade=" + modalidade + ", cargaTotal=" + cargaTotal + ", modulo=" + modulos
                 + ", coordenador=" + coordenador + "]";
     }
+
 
     
 }

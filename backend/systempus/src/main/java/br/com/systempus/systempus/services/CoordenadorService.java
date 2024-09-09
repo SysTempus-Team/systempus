@@ -36,7 +36,7 @@ public class CoordenadorService implements ICoordenadorService{
             if (!repository.existsByCPF(coordenador.getCpf())){
                 repository.save(coordenador);
             }else{
-                throw new DataIntegrityViolationException(coordenador.getCpf());
+                throw new DataIntegrityViolationException(DataIntegrityViolationException.cpfExists(coordenador.getCpf()));
             }
         } else {
             throw new IllegalStateException(Coordenador.class.getSimpleName().toString());
@@ -63,6 +63,9 @@ public class CoordenadorService implements ICoordenadorService{
         coordenadorExistente.setNome(coordenador.getNome());
         coordenadorExistente.setTelefone(coordenador.getTelefone());
         coordenadorExistente.setCursos(coordenador.getCursos());
+        coordenadorExistente.setFoto(coordenador.getFoto());
+        coordenadorExistente.setEmail(coordenador.getEmail());
+        coordenadorExistente.setStatus(coordenador.getStatus());
 
         repository.saveAndFlush(coordenadorExistente);
 

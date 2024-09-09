@@ -39,6 +39,13 @@ public class ErrorAdvice {
         return error;
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiError handleGenericException(Exception exception, HttpServletRequest request){
+        ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), exception.getMessage(), request.getServletPath());
+        return error;
+    }    
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleNotReadableException(HttpMessageNotReadableException exception, HttpServletRequest request){

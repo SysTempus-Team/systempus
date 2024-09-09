@@ -6,9 +6,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,21 +27,19 @@ public class Modulo {
     private Integer id;
 
     @NotNull(message = "Campo Obrigatório")
-    private Integer numero;
+    private String nome;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataInicio;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataFim;
 
-    @JsonIgnore
-    //@JsonBackReference(value = "curso_modulos")
+    @JsonBackReference(value = "curso_modulos")
     @ManyToOne
-    @JoinColumn(name = "id_curso")
+    @JoinColumn(name = "curso_id")
     private Curso curso;
 
-
-    //@JsonManagedReference(value = "disciplina_modulo")
+    @JsonManagedReference(value = "disciplina_modulo")
     @OneToMany(mappedBy = "modulo")
     private List<Disciplina> disciplinas;
 
@@ -55,12 +51,12 @@ public class Modulo {
         return id;
     }
 
-    public void setNumero(Integer numero) {
-        this.numero = numero;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public Integer getNumero() {
-        return numero;
+    public String getNome() {
+        return nome;
     }
 
     public void setDataInicio(LocalDate dataInicio) {

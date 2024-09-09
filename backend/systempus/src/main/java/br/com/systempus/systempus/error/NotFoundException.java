@@ -12,6 +12,8 @@ public class NotFoundException extends RuntimeException{
     }
 
     public static String IdNotFound(String entidade, Integer id){
+        //StringBuffer sincronizado (quando tem muitos acessos, ele fica lento) - Sessão crítica [mais utilizado]
+        //Pode-se colocar StringBuilder //TODO <----- Pesquisar e Estudar
         StringBuffer mensagem = new StringBuffer();
         mensagem.append(entidade)
                 .append( " com o id=")

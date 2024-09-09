@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,22 +27,23 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("api/v1/professor")
 @Tag(name = "Professor")
+@CrossOrigin(origins = ("*"), allowedHeaders = ("*"))
 public class ProfessorController {
-
+    
     @Autowired
     private ProfessorService professorService;
-
+    
     @GetMapping("/{id}")
     public ResponseEntity<Professor> getOne(@PathVariable Integer id){
         return ResponseEntity.ok().body(professorService.getOne(id));
     }
-
-    @GetMapping
+    
+    @GetMapping("/")
     public ResponseEntity<List<Professor>> getAll(){
         return ResponseEntity.ok().body(professorService.getAll());
     }
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<Professor> save(@RequestBody Professor professor, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
         professorService.save(professor);
 
@@ -62,7 +64,7 @@ public class ProfessorController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping
+    @PutMapping("/")
     public ResponseEntity<Professor> update(@RequestBody Professor professor){
         professorService.update(professor);
         return ResponseEntity.ok().body(professor);

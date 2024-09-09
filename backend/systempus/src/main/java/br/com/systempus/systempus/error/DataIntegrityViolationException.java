@@ -4,12 +4,12 @@ import org.springframework.dao.NonTransientDataAccessException;
 
 public class DataIntegrityViolationException extends NonTransientDataAccessException{
 
-    public DataIntegrityViolationException(String cpf){
-        super(cpfExists(cpf));
+    public DataIntegrityViolationException(String message){
+        super(message);
     }
 
     public static String cpfExists(String cpf){
-        StringBuffer mensagem = new StringBuffer();
+        StringBuilder mensagem = new StringBuilder();
 
         mensagem.append("O CPF: ")
                 .append(cpf)
@@ -17,4 +17,20 @@ public class DataIntegrityViolationException extends NonTransientDataAccessExcep
 
         return mensagem.toString();
     }
+
+    public static String turnoAlreadyExists(String turno, String curso){
+        StringBuilder mensagem = new StringBuilder();
+        
+        mensagem.append("Já existe um período com o turno ")
+                .append(turno)
+                .append(" cadastrado para o curso ")
+                .append(curso);
+        
+        return mensagem.toString();
+    }
+
+    public static String turnoDoesntMatchHours(){
+        return "Os horários informados não são condizentes com o turno escolhido";
+    }
+
 }
