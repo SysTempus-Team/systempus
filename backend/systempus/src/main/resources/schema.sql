@@ -159,6 +159,7 @@ CREATE TABLE disponibilidade_professor (
     id                     serial      primary key,
     horario_aula_id           integer,
     professor_id              integer,
+    dia_semana                integer,
 
     constraint rel_disponibilidade_professor_horario_aula foreign key (horario_aula_id) references horario_aula on delete cascade,
     constraint rel_disponibilidade_professor_professor foreign key (professor_id) references professor on delete cascade

@@ -62,9 +62,4 @@ public class Periodo {
     @JoinColumn(name = "periodo_id")
     private List<HorarioAula> horariosAula;
 
-
-
-    
-
-    
 }
