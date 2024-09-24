@@ -3,8 +3,12 @@ package br.com.systempus.systempus.services;
 import java.lang.reflect.Field;
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +16,7 @@ import org.springframework.util.ReflectionUtils;
 
 import br.com.systempus.systempus.domain.CargaHoraria;
 import br.com.systempus.systempus.domain.Curso;
+import br.com.systempus.systempus.domain.HorarioAula;
 import br.com.systempus.systempus.domain.Periodo;
 import br.com.systempus.systempus.domain.enumerador.Turno;
 import br.com.systempus.systempus.error.DataIntegrityViolationException;
@@ -20,6 +25,7 @@ import br.com.systempus.systempus.repository.CargaHorariaRepository;
 import br.com.systempus.systempus.repository.CursoRepository;
 import br.com.systempus.systempus.repository.HorarioAulaRepository;
 import br.com.systempus.systempus.repository.PeriodoRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PeriodoService {
@@ -34,7 +40,7 @@ public class PeriodoService {
     private CargaHorariaRepository cargaRepository;
 
     @Autowired
-    private HorarioAulaRepository horarioAulaRepository;
+    private HorarioAulaService horarioAulaService;
 
     public Periodo getOne(Integer id){
         Periodo resultado = repository.findById(id).orElseThrow(() -> new NotFoundException(Periodo.class.getSimpleName().toString(), id));
@@ -46,9 +52,10 @@ public class PeriodoService {
         return resultado;
     }
 
+    @Transactional
     public void save(Periodo periodo, Integer idCurso){
 
-        CargaHoraria cargarHoraria = cargaRepository.findById(3).get();
+        CargaHoraria cargaHoraria = cargaRepository.findById(3).get();
 
         if (validarTurnoHorario(periodo) == false){
             throw new DataIntegrityViolationException(DataIntegrityViolationException.turnoDoesntMatchHours());
@@ -58,12 +65,21 @@ public class PeriodoService {
             
             Curso cursoExistente = cursoRepository.findById(idCurso).get();
             
-            if (validarHorarios(periodo)){
+            if (validarHorarios(periodo, cargaHoraria)){
+
                 // periodo.setCurso(cursoExistente);
                 // turnoCadastrado(periodo);
-                repository.save(periodo);
+
+                try {
+                    //TODO: Alterar 'save' para 'criarPorPeriodo'
+                    List<HorarioAula> horariosAula = horarioAulaService.save(cargaHoraria, periodo);
+                    periodo.setHorariosAula(horariosAula);
+                    repository.save(periodo);
+                } catch (Exception e){
+                    throw new DataIntegrityViolationException("Não foi possível salvar Horários Aulas: " + e.toString());
+                }
             }else{
-                throw new DataIntegrityViolationException("Os valores dos períodos precisam condizer com a carga horária de " + cargarHoraria.getCargaHoraria() + " minutos da instituição");
+                throw new DataIntegrityViolationException("Os valores dos períodos precisam condizer com a carga horária de " + cargaHoraria.getCargaHoraria() + " minutos da instituição");
             }
         }else{
             throw new NotFoundException(Curso.class.getSimpleName().toString(), idCurso);
@@ -80,15 +96,15 @@ public class PeriodoService {
 
     public void update(Periodo periodo, Integer id){
 
-        CargaHoraria cargarHoraria = cargaRepository.findById(3).get();
+        CargaHoraria cargaHoraria = cargaRepository.findById(3).get();
 
         if (validarTurnoHorario(periodo) == false){
             throw new DataIntegrityViolationException(DataIntegrityViolationException.turnoDoesntMatchHours());
         }
 
         if(repository.existsById(id)){
-            if (validarHorarios(periodo)){
-                
+            if (validarHorarios(periodo, cargaHoraria)){
+
                 Periodo periodoExistente = repository.findById(id).get();
                 // periodo.setCurso(periodoExistente.getCurso());
 
@@ -102,7 +118,7 @@ public class PeriodoService {
     
                 repository.saveAndFlush(periodoExistente);
             }else{
-                throw new DataIntegrityViolationException("Os valores dos períodos precisam condizer com a carga horária de " + cargarHoraria.getCargaHoraria() + " minutos da instituição");
+                throw new DataIntegrityViolationException("Os valores dos períodos precisam condizer com a carga horária de " + cargaHoraria.getCargaHoraria() + " minutos da instituição");
             }
         }else{
             throw new NotFoundException(Periodo.class.getSimpleName().toString(), periodo.getId());
@@ -140,8 +156,8 @@ public class PeriodoService {
         }
     }
 
-    private Boolean validarHorarios(Periodo periodo){
-        CargaHoraria cargarHoraria = cargaRepository.findById(3).get();
+    //TODO: Melhorar nome da função
+    private Boolean validarHorarios(Periodo periodo, CargaHoraria cargaHoraria){
 
         Duration duracaoAteIntervalo = Duration.between(periodo.getInicioHorario(), periodo.getInicioIntervalo());
         long diferenca1 = duracaoAteIntervalo.toMinutes();
@@ -149,9 +165,9 @@ public class PeriodoService {
         Duration duracaoAteFim = Duration.between(periodo.getFimIntervalo(), periodo.getFimHorario());
         long diferenca2 = duracaoAteFim.toMinutes();
 
-        long carga = (long) cargarHoraria.getCargaHoraria();
+        long carga = (long) cargaHoraria.getCargaHoraria();
 
-        if ((diferenca1 == carga || diferenca1 == carga * 2) && (diferenca2 == carga || diferenca2 == carga * 2)){
+        if ((diferenca1 % carga == 0) && (diferenca2 % carga == 0)){
             return true;
         }else{
             return false;
@@ -177,8 +193,10 @@ public class PeriodoService {
             return isHorarioMatutino(horarioInicio, horarioFim);
         }else if (periodo.getTurno() == Turno.VESPERTINO) {
             return isHorarioVespertino(horarioInicio, horarioFim);
-        }else{
+        }else if (periodo.getTurno() == Turno.NOTURNO){
             return isHorarioNoturno(horarioInicio, horarioFim);
+        }else{
+            return isPeriodoIntegral(horarioInicio, horarioFim);
         }
         
     }
@@ -193,5 +211,9 @@ public class PeriodoService {
 
     private Boolean isHorarioNoturno(LocalTime horarioInicio, LocalTime horarioFim){
         return horarioInicio.isAfter(LocalTime.of(17, 59)) && horarioFim.isBefore(LocalTime.of(23, 59));
+    }
+
+    private Boolean isPeriodoIntegral(LocalTime horarioInicio, LocalTime horarioFim){
+        return horarioInicio.isAfter(LocalTime.of(06, 59)) && horarioFim.isBefore(LocalTime.of(18, 00));
     }
 }

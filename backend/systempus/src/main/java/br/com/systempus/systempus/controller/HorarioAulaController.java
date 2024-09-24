@@ -31,31 +31,31 @@ public class HorarioAulaController {
     private HorarioAulaService service;
 
 
-    // @GetMapping("{id}")
-    // public ResponseEntity<HorarioAula> getOne(@PathVariable Integer id){
-    //     return ResponseEntity.ok().body(service.getById(id));
-    // }
+    @GetMapping("{id}")
+    public ResponseEntity<HorarioAula> getOne(@PathVariable Integer id){
+        return ResponseEntity.ok().body(service.getById(id));
+    }
 
     @GetMapping
     public ResponseEntity<List<HorarioAula>> getAll(){
         return ResponseEntity.ok().body(service.getAll());
     }
 
-    @PostMapping
-    public ResponseEntity<HorarioAula> save(@RequestBody HorarioAula horarioAula, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
-        service.save(horarioAula);
+    // @PostMapping
+    // public ResponseEntity<HorarioAula> save(@RequestBody HorarioAula horarioAula, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+    //     service.save(horarioAula);
 
-        StringBuffer path = new StringBuffer();
+    //     StringBuffer path = new StringBuffer();
 
-        path.append(request.getRequestURI())
-            .append("/")
-            .append(horarioAula.getId());
+    //     path.append(request.getRequestURI())
+    //         .append("/")
+    //         .append(horarioAula.getId());
 
 
-        URI uri = new URI(path.toString());
+    //     URI uri = new URI(path.toString());
 
-        return ResponseEntity.created(uri).body(horarioAula);
-    }
+    //     return ResponseEntity.created(uri).body(horarioAula);
+    // }
 
     // @DeleteMapping("{id}")
     // public ResponseEntity<HorarioAula> delete(@PathVariable Integer id){

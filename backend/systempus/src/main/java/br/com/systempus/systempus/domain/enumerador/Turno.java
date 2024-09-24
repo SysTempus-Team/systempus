@@ -11,7 +11,8 @@ public enum Turno {
     
     MATUTINO(0, "Matutino"),
     VESPERTINO(1, "Vespertino"),
-    NOTURNO(2, "Noturno");
+    NOTURNO(2, "Noturno"),
+    INTEGRAL(3, "Integral");
 
     private final Integer value;
     private final String nome;
