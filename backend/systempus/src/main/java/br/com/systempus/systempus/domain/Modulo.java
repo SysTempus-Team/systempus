@@ -17,8 +17,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "modulo")
 public class Modulo {
 
@@ -34,60 +42,14 @@ public class Modulo {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dataFim;
 
-    @JsonBackReference(value = "curso_modulos")
     @ManyToOne
+    @JsonBackReference(value = "curso_modulos")
     @JoinColumn(name = "curso_id")
     private Curso curso;
 
-    @JsonManagedReference(value = "disciplina_modulo")
+    // @JsonManagedReference(value = "disciplina_modulo")
     @OneToMany(mappedBy = "modulo")
     private List<Disciplina> disciplinas;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setDataInicio(LocalDate dataInicio) {
-        this.dataInicio = dataInicio;
-    }
-
-    public LocalDate getDataInicio() {
-        return dataInicio;
-    }
-
-    public void setDataFim(LocalDate dataFim) {
-        this.dataFim = dataFim;
-    }
-
-    public LocalDate getDataFim() {
-        return dataFim;
-    }
-
-    public void setCurso(Curso curso) {
-        this.curso = curso;
-    }
-
-    public Curso getCurso() {
-        return curso;
-    }
-
-    public void setDisciplinas(List<Disciplina> disciplinas) {
-        this.disciplinas = disciplinas;
-    }
-
-    public List<Disciplina> getDisciplinas() {
-        return disciplinas;
-    }
 }

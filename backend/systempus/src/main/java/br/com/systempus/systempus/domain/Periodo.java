@@ -4,8 +4,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import br.com.systempus.systempus.domain.enumerador.Turno;
 import jakarta.persistence.Column;
@@ -54,12 +53,16 @@ public class Periodo {
 
     @ManyToOne
     @JoinColumn(name = "instituicao_id")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    // @JsonManagedReference(value = "instituicao_periodos")
     private Instituicao instituicao;
 
     @OneToMany
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    // @JsonManagedReference(value = "periodo_hora_aula")
     @JoinColumn(name = "periodo_id")
     private List<HorarioAula> horariosAula;
+
+    @ManyToOne
+    @JoinColumn(name = "curso_id")
+    private Curso curso;
 
 }

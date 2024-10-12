@@ -46,22 +46,16 @@ public class PeriodoService {
     }
 
     @Transactional
-    public void save(Periodo periodo, Integer idCurso) {
+    public void save(Periodo periodo) {
 
         CargaHoraria cargaHoraria = cargaRepository.findById(3).get();
 
-        Util.validarTurnoHorario(periodo);
-
-        Curso cursoExistente = cursoService.getOne(idCurso);
-
-        Util.validarHorarios(periodo, cargaHoraria);
-
-        // periodo.setCurso(cursoExistente);
-        // turnoCadastrado(periodo);
-
+        Util.matchTurno(periodo);
+        Util.matchCargaHoraria(periodo, cargaHoraria);
+        Util.podeCadastrarPorTurno(periodo, getAll());
+        
         try {
-            // TODO: Alterar 'save' para 'criarPorPeriodo'
-            List<HorarioAula> horariosAula = horarioAulaService.save(cargaHoraria, periodo);
+            List<HorarioAula> horariosAula = horarioAulaService.saveHorariosByPeriodo(cargaHoraria, periodo);
             periodo.setHorariosAula(horariosAula);
             repository.save(periodo);
         } catch (Exception e) {
@@ -82,10 +76,10 @@ public class PeriodoService {
 
         CargaHoraria cargaHoraria = cargaRepository.findById(3).get();
 
-        Util.validarTurnoHorario(periodo);
+        Util.matchTurno(periodo);
 
         if(repository.existsById(id)){
-            Util.validarHorarios(periodo, cargaHoraria);
+            Util.matchCargaHoraria(periodo, cargaHoraria);
 
                 Periodo periodoExistente = repository.findById(id).get();
                 // periodo.setCurso(periodoExistente.getCurso());
@@ -126,6 +120,11 @@ public class PeriodoService {
 
     public List<Periodo> getPeriodosByCurso(Integer idCurso) {
         Curso cursoExistente = cursoService.getOne(idCurso);
+        System.out.println(cursoExistente.getPeriodos().size());
+        for (Periodo periodo : cursoExistente.getPeriodos()){
+            System.out.println(periodo);
+        }
+        
         List<Periodo> periodos = cursoExistente.getPeriodos();
         return periodos;
     }

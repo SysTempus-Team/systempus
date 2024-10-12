@@ -4,8 +4,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,11 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.systempus.systempus.domain.Curso;
 import br.com.systempus.systempus.domain.Periodo;
-import br.com.systempus.systempus.domain.Modulo;
+import br.com.systempus.systempus.domain.dto.PeriodoDTO;
 import br.com.systempus.systempus.services.PeriodoService;
-import br.com.systempus.systempus.services.ModuloService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,9 +47,9 @@ public class PeriodoController {
         return ResponseEntity.ok().body(service.getAll());
     }
 
-    @PostMapping("{idCurso}")
-    public ResponseEntity<Periodo> save(@RequestBody Periodo periodo, @PathVariable Integer idCurso, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
-        service.save(periodo, idCurso);
+    @PostMapping
+    public ResponseEntity<Periodo> save(@RequestBody Periodo periodo, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        service.save(periodo);
 
         StringBuffer path = new StringBuffer();
 
@@ -82,9 +82,10 @@ public class PeriodoController {
     }
 
     @GetMapping("curso/{idCurso}")
-    public ResponseEntity<List<Periodo>> getPeriodosByCurso(@PathVariable Integer idCurso){
+    public ResponseEntity<List<PeriodoDTO>> getPeriodosByCurso(@PathVariable Integer idCurso){
         List<Periodo> periodos = service.getPeriodosByCurso(idCurso);
-        return ResponseEntity.ok().body(periodos);
+        List<PeriodoDTO> periodosDTO = periodos.stream().map(periodo -> PeriodoDTO.convertToDTO(periodo)).collect(Collectors.toList());
+        return ResponseEntity.ok().body(periodosDTO);
     }
 
 }

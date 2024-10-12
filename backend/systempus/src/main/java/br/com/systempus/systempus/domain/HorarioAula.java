@@ -2,12 +2,12 @@ package br.com.systempus.systempus.domain;
 
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,12 +40,16 @@ public class HorarioAula {
 
     @ManyToOne
     @JoinColumn(name = "carga_horaria_id")
+    @JsonBackReference(value = "periodo_hora_aula")
     private CargaHoraria cargaHoraria;
 
     @OneToMany(mappedBy = "horarioAula")
+    @JsonManagedReference(value = "disponibilidade_professor_horario_aula")
     private List<DisponibilidadeProfessor> disponibilidadeProfessor;
 
     @OneToMany(mappedBy = "horarioAula")
     private List<HorarioDisciplina> horarioDisciplina;
+
+    
     
 }

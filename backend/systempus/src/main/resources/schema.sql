@@ -138,23 +138,6 @@ CREATE TABLE horario_aula (
     constraint rel_horario_aula_carga_periodo foreign key (periodo_id) references periodo on delete cascade
 );
 
--- CREATE TABLE horario_aula_horarios (
---     horario_aula_id             integer,
---     horarios                     varchar(60)         not null,
-
---     constraint rel_horario_aula_horarios foreign key (horario_aula_id) references horario_aula on delete cascade,
---     primary key (horario_aula_id, horarios)
--- );
-
--- CREATE TABLE horario_aula_horarios (
---     horario_aula_id             integer,
---     horarios                    varchar(60)     not null,
-
---     PRIMARY KEY (horario_aula_id, horarios),  -- Chave primária composta
---     CONSTRAINT rel_horario_aula_horarios FOREIGN KEY (horario_aula_id) REFERENCES horario_aula (id) ON DELETE CASCADE
--- );
-
-
 CREATE TABLE disponibilidade_professor (
     id                     serial      primary key,
     horario_aula_id           integer,

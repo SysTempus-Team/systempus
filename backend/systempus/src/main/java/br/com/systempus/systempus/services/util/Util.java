@@ -2,6 +2,7 @@ package br.com.systempus.systempus.services.util;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.List;
 
 import br.com.systempus.systempus.domain.CargaHoraria;
 import br.com.systempus.systempus.domain.Periodo;
@@ -10,7 +11,7 @@ import br.com.systempus.systempus.error.DataIntegrityViolationException;
 
 public class Util {
 
-    public static Boolean validarTurnoHorario(Periodo periodo) {
+    public static Boolean matchTurno(Periodo periodo) {
         LocalTime horarioInicio = periodo.getInicioHorario();
         LocalTime horarioFim = periodo.getFimHorario();
 
@@ -45,7 +46,7 @@ public class Util {
     }
 
     // TODO: Melhorar nome da função
-    public static Boolean validarHorarios(Periodo periodo, CargaHoraria cargaHoraria) {
+    public static Boolean matchCargaHoraria(Periodo periodo, CargaHoraria cargaHoraria) {
         try {
             Duration duracaoAteIntervalo = Duration.between(periodo.getInicioHorario(), periodo.getInicioIntervalo());
             long diferenca1 = duracaoAteIntervalo.toMinutes();
@@ -64,6 +65,14 @@ public class Util {
             throw new DataIntegrityViolationException(
                     "Os valores dos períodos precisam condizer com a carga horária de " + cargaHoraria.getCargaHoraria()
                             + " minutos da instituição");
+        }
+    }
+
+    public static void podeCadastrarPorTurno(Periodo periodoCadastro, List<Periodo> periodos){
+        for (Periodo p : periodos){
+            if (p.getCurso().getId() == periodoCadastro.getCurso().getId() && p.getTurno() == periodoCadastro.getTurno()){
+                throw new DataIntegrityViolationException("Turno já cadastrado para este curso");
+            }
         }
     }
 

@@ -26,12 +26,6 @@ public class HorarioAulaService {
     @Autowired
     private HorarioAulaRepository repository;
 
-    @Autowired
-    private CargaHorariaRepository cargaHoraRepository;
-
-    @Autowired
-    private PeriodoRepository periodoRepository;
-
     public HorarioAula getById(Integer id){
         return repository.findById(id).get();
     }
@@ -46,7 +40,7 @@ public class HorarioAulaService {
         horariosAulas.add(horarioAula);
     }
 
-    public List<HorarioAula> save(CargaHoraria cargaHoraria, Periodo periodo){
+    public List<HorarioAula> saveHorariosByPeriodo(CargaHoraria cargaHoraria, Periodo periodo){
 
         
         try {

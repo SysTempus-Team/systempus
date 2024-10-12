@@ -33,13 +33,13 @@ public class DisponibilidadeProfessor {
     @ManyToOne
     @MapsId("professorId")
     @JoinColumn(name = "professor_id")
-    @JsonBackReference
+    @JsonBackReference(value = "disponibilidade_professor_professor")
     private Professor professor;
     
     @ManyToOne
     @MapsId("horarioAulaId")
     @JoinColumn(name = "horario_aula_id")
-    @JsonBackReference
+    @JsonBackReference(value = "disponibilidade_professor_horario_aula")
     private HorarioAula horarioAula;
 
     @OneToMany(mappedBy = "disponibilidadeProfessor", cascade = CascadeType.ALL, orphanRemoval = true)

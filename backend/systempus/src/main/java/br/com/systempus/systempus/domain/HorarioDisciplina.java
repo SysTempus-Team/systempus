@@ -12,8 +12,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "horario_disciplina")
 public class HorarioDisciplina {
     
@@ -28,51 +36,11 @@ public class HorarioDisciplina {
     @ManyToOne
     @MapsId("disciplinaId")
     @JoinColumn(name = "disciplina_id")
-    @JsonManagedReference
+    // @JsonManagedReference(value = "horario_disciplina")
     private Disciplina disciplina;
 
     @OneToMany(mappedBy = "horarioDisciplina")
     private List<HorarioDocente> horariosDocente;
-
-    public HorarioDisciplina(HorarioDisciplinaId id, Integer idHorarioAula, Integer idDisciplina,
-            List<DisponibilidadeProfessor> disponibilidadeProfessor) {
-        this.id = id;
-    }
-
-    public HorarioDisciplina() {
-    }
-
-    public HorarioDisciplinaId getId() {
-        return id;
-    }
-
-    public void setId(HorarioDisciplinaId id) {
-        this.id = id;
-    }
-
-    public Disciplina getDisciplina() {
-        return disciplina;
-    }
-
-    public void setDisciplina(Disciplina disciplina) {
-        this.disciplina = disciplina;
-    }
-
-    public HorarioAula getHorarioAula() {
-        return horarioAula;
-    }
-
-    public void setHorarioAula(HorarioAula horarioAula) {
-        this.horarioAula = horarioAula;
-    }
-
-    public List<HorarioDocente> getHorariosDocente() {
-        return horariosDocente;
-    }
-
-    public void setHorariosDocente(List<HorarioDocente> horariosDocente) {
-        this.horariosDocente = horariosDocente;
-    }
     
     
 }

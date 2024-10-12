@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.Entity;
@@ -17,8 +16,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "disciplina")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Disciplina {
@@ -40,52 +47,7 @@ public class Disciplina {
     private Modulo modulo;
 
     @OneToMany(mappedBy = "disciplina")
-    @JsonBackReference
+    @JsonBackReference(value = "horario_disciplina")
     private List<HorarioDisciplina> horarioDisciplina;
-
-    public Disciplina() {
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-
-    public void setModulo(Modulo modulo) {
-        this.modulo = modulo;
-    }
-
-    public Modulo getModulo() {
-        return modulo;
-    }
-
-    public void setProfessores(List<Professor> professores) {
-        this.professores = professores;
-    }
-
-
-    public List<Professor> getProfessores() {
-        return professores;
-    }
-
-    public List<HorarioDisciplina> getHorarioDisciplina() {
-        return horarioDisciplina;
-    }
-
-    public void setHorarioDisciplina(List<HorarioDisciplina> horarioDisciplina) {
-        this.horarioDisciplina = horarioDisciplina;
-    }
 
 }

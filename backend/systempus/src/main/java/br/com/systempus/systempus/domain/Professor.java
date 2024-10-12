@@ -35,6 +35,7 @@ public class Professor extends Profissional{
     private List<Disciplina> disciplinas;
 
     @OneToMany(mappedBy = "professor")
+    // @JsonManagedReference(value = "disponibilidade_professor_professor")
     private List<DisponibilidadeProfessor> disponibilidadeProfessor;
 
     public Professor(){

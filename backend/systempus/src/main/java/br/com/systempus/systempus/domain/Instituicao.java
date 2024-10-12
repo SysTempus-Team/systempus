@@ -35,11 +35,11 @@ public class Instituicao {
     private String cnpj;
 
     @OneToMany(mappedBy = "instituicao")
-    @JsonBackReference
+    @JsonBackReference(value = "instituicao_periodos")
     private List<Periodo> periodos;
 
-    @JsonBackReference
     @OneToMany(mappedBy = "instituicao")
+    @JsonBackReference(value = "instituicao_cargas_horarias")
     private List<CargaHoraria> cargasHorarias;
 
     
