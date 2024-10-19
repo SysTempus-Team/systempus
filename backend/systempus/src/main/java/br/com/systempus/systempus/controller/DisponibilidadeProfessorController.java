@@ -41,21 +41,21 @@ public class DisponibilidadeProfessorController {
         return ResponseEntity.ok().body(service.getAll());
     }
 
-    @PostMapping
-    public ResponseEntity<DisponibilidadeProfessor> save(@RequestBody DisponibilidadeProfessor disponibilidadeProfessor, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
-        service.save(disponibilidadeProfessor);
+    // @PostMapping
+    // public ResponseEntity<DisponibilidadeProfessor> save(@RequestBody DisponibilidadeProfessor disponibilidadeProfessor, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+    //     service.save(disponibilidadeProfessor);
 
-        StringBuffer path = new StringBuffer();
+    //     StringBuffer path = new StringBuffer();
 
-        path.append(request.getRequestURI())
-            .append("/")
-            .append(disponibilidadeProfessor.getId());
+    //     path.append(request.getRequestURI())
+    //         .append("/")
+    //         .append(disponibilidadeProfessor.getId());
 
 
-        URI uri = new URI(path.toString());
+    //     URI uri = new URI(path.toString());
 
-        return ResponseEntity.created(uri).body(disponibilidadeProfessor);
-    }
+    //     return ResponseEntity.created(uri).body(disponibilidadeProfessor);
+    // }
 
     // @DeleteMapping("{id}")
     // public ResponseEntity<DisponibilidadeProfessor> delete(@PathVariable Integer id){

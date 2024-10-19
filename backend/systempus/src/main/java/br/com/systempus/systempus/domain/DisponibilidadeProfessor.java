@@ -27,6 +27,13 @@ import jakarta.persistence.OneToMany;
 @Table(name = "disponibilidade_professor")
 public class DisponibilidadeProfessor {
 
+    public DisponibilidadeProfessor(DisponibilidadeProfessorId id, Professor professor, HorarioAula horarioAula, DiaSemana diaSemana){
+        this.id = id;
+        this.professor = professor;
+        this.horarioAula = horarioAula;
+        this.diaSemana = diaSemana;
+    }
+
     @EmbeddedId
     private DisponibilidadeProfessorId id;
 

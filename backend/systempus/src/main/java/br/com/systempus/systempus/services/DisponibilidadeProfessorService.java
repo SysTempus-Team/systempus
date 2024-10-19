@@ -1,5 +1,6 @@
 package br.com.systempus.systempus.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,9 +8,14 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.systempus.systempus.domain.DisponibilidadeProfessor;
+import br.com.systempus.systempus.domain.HorarioAula;
+import br.com.systempus.systempus.domain.Professor;
+import br.com.systempus.systempus.domain.dto.DisponibilidadeProfessorDTO;
+import br.com.systempus.systempus.domain.embeddableclass.DisponibilidadeProfessorId;
 import br.com.systempus.systempus.repository.DisciplinaRepository;
 import br.com.systempus.systempus.repository.DisponibilidadeProfessorRepository;
 import br.com.systempus.systempus.repository.HorarioAulaRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class DisponibilidadeProfessorService {
@@ -18,40 +24,31 @@ public class DisponibilidadeProfessorService {
     private DisponibilidadeProfessorRepository repository;
 
     @Autowired
-    private HorarioAulaRepository horarioAulaRepository;
-
-    @Autowired
-    private DisciplinaRepository profRepository;
+    private HorarioAulaService horarioAulaService;
 
     // public DisponibilidadeProfessor getById(Integer id){
-    //     // return repository.findById(id).get();
+    //     return repository.findById(id).get();
     // }
 
     public List<DisponibilidadeProfessor> getAll(){
         return repository.findAll();
     }
 
-    public DisponibilidadeProfessor save(DisponibilidadeProfessor disponibilidadeProfessor){
-        // if (profRepository.existsById(disponibilidadeProfessor.getIdProfessor()) && horarioAulaRepository.existsById(disponibilidadeProfessor.getIdHorarioAula())){
-            return repository.save(disponibilidadeProfessor);
-        // }else{
-            // throw new DataIntegrityViolationException("Disponibilidade ou Professor não existentes no banco de dados");
-        // }
+    @Transactional
+    public List<DisponibilidadeProfessorDTO> save(List<DisponibilidadeProfessorDTO> disponibilidades, Professor professor){
 
+        List<DisponibilidadeProfessorDTO> disponibilidadesRetorno = new ArrayList<DisponibilidadeProfessorDTO>();
+
+        for (DisponibilidadeProfessorDTO disponibilidade : disponibilidades){
+            HorarioAula horario = horarioAulaService.getById(disponibilidade.getHorarioAulaId());
+            DisponibilidadeProfessorId id = new DisponibilidadeProfessorId(horario.getId(), professor.getId());
+            DisponibilidadeProfessor d = new DisponibilidadeProfessor(id, professor, horario, disponibilidade.getDiaSemana());
+            disponibilidadesRetorno.add(disponibilidade);
+            repository.save(d);
+        }
+
+        return disponibilidadesRetorno;
     }
 
-    // public DisponibilidadeProfessor update(DisponibilidadeProfessor disponibilidadeProfessor, Integer id){
-    //     if (repository.existsById(id)){
-    //         DisponibilidadeProfessor existente = repository.findById(id).get();
-
-    //         return repository.saveAndFlush(existente);
-    //     }else{
-    //         return null;
-    //     }
-    // }
-
-    // public void deleteById(Integer id){
-    //     repository.deleteById(id);
-    // }
 
 }

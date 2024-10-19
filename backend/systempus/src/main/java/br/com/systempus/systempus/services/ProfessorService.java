@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
+import br.com.systempus.systempus.domain.DisponibilidadeProfessor;
 import br.com.systempus.systempus.domain.Professor;
+import br.com.systempus.systempus.domain.dto.DisponibilidadeProfessorDTO;
 import br.com.systempus.systempus.error.DataIntegrityViolationException;
 import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
@@ -20,6 +22,9 @@ public class ProfessorService implements IProfessorService{
 
     @Autowired
     private ProfessorRepository repository;
+
+    @Autowired
+    private DisponibilidadeProfessorService disponibilidadeService;
 
     public List<Professor> getAll() {
         List<Professor> resultado = repository.findAll();
@@ -88,6 +93,17 @@ public class ProfessorService implements IProfessorService{
         }else{
             throw new NotFoundException(Professor.class.getSimpleName().toString(), id);
         }
+    }
+
+    public List<DisponibilidadeProfessorDTO> saveDisponibilidades(List<DisponibilidadeProfessorDTO> disponibilidadeRequest, Integer professorId) {
+        Professor professor = getOne(professorId);
+        return disponibilidadeService.save(disponibilidadeRequest, professor);
+    }
+
+    public List<DisponibilidadeProfessorDTO> getDisponibilidadeByProfessorId(Integer id) {
+        Professor professor = getOne(id);
+        List<DisponibilidadeProfessor> getDisponibilidades = professor.getDisponibilidadeProfessor();
+        return DisponibilidadeProfessorDTO.convertToDTO(getDisponibilidades);
     }
 
 

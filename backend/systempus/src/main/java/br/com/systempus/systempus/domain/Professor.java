@@ -14,11 +14,15 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 import jakarta.persistence.DiscriminatorValue;
 
 
 @Entity
 @Table(name = "professor")
+@Getter
+@Setter
 @DiscriminatorValue("2")
 // @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Professor extends Profissional{
@@ -46,21 +50,5 @@ public class Professor extends Profissional{
         this.setCpf(cpf);
         this.setNome(nome);
         this.setTelefone(telefone);
-    }
-
-    public void setDisciplinas(List<Disciplina> disciplinas){
-        this.disciplinas = disciplinas;
-    }
-
-    public List<Disciplina> getDisciplinas(){
-        return disciplinas;
-    }
-
-    public void setCursos(List<Curso> cursos){
-        this.cursos = cursos;
-    }
-
-    public List<Curso> getCursos(){
-        return cursos;
     }
 }
