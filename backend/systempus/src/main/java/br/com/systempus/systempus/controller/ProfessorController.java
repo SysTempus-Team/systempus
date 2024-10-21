@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.systempus.systempus.domain.DisponibilidadeProfessor;
 import br.com.systempus.systempus.domain.Professor;
+import br.com.systempus.systempus.domain.dto.DisponibilidadeProfessorDTO;
 import br.com.systempus.systempus.services.ProfessorService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -74,6 +76,27 @@ public class ProfessorController {
     public ResponseEntity<Professor> updatePartial(@RequestBody Map<String, Object> mapValores, @PathVariable Integer id){
         Professor professorAtualizado = professorService.updatePartial(mapValores, id);
         return ResponseEntity.ok().body(professorAtualizado);
+    }
+
+    @PostMapping("/{id}/disponibilidades")
+    public ResponseEntity<List<DisponibilidadeProfessorDTO>> saveDisponibilidadesPorProfessor(@PathVariable Integer id, @RequestBody List<DisponibilidadeProfessorDTO> disponibilidadeRequest, HttpServletRequest request, HttpServletResponse response) throws URISyntaxException{
+        List<DisponibilidadeProfessorDTO> disponibilidades = professorService.saveDisponibilidades(disponibilidadeRequest, id);
+
+        StringBuffer path = new StringBuffer();
+
+        path.append(request.getRequestURI())
+            .append("/")
+            .append(id);
+
+        URI uri = new URI(path.toString());
+
+        return ResponseEntity.created(uri).body(disponibilidades);
+    }
+
+    @GetMapping("/{id}/disponibilidades")
+    public ResponseEntity<List<DisponibilidadeProfessorDTO>> getDisponibilidadeByProfessorId(@PathVariable Integer id){
+        List<DisponibilidadeProfessorDTO> disponibilidades = professorService.getDisponibilidadeByProfessorId(id);
+        return ResponseEntity.ok().body(disponibilidades);
     }
 
 }

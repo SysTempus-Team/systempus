@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS horario_aula_horarios;
 DROP TABLE IF EXISTS horario_docente;
 DROP TABLE IF EXISTS periodo_carga_horaria;
 DROP TABLE IF EXISTS horario_disciplina;
@@ -16,6 +17,12 @@ DROP TABLE IF EXISTS instituicao;
 DROP TABLE IF EXISTS curso;
 DROP TABLE IF EXISTS coordenador;
 DROP TABLE IF EXISTS profissional;
+DROP TABLE IF EXISTS teste;
+
+CREATE TABLE teste (
+    id        serial,
+    nome        varchar(150)
+);
 
 CREATE TABLE instituicao (
     id        serial                primary key,
@@ -124,6 +131,8 @@ CREATE TABLE horario_aula (
     id                          serial      primary key,
     carga_horaria_id            integer,
     periodo_id                  integer,
+    inicio_aula                 TIME(60),
+    fim_aula                    TIME(60),
 
     constraint rel_horario_aula_carga_horaria foreign key (carga_horaria_id) references carga_horaria on delete cascade,
     constraint rel_horario_aula_carga_periodo foreign key (periodo_id) references periodo on delete cascade
@@ -133,6 +142,7 @@ CREATE TABLE disponibilidade_professor (
     id                     serial      primary key,
     horario_aula_id           integer,
     professor_id              integer,
+    dia_semana                integer,
 
     constraint rel_disponibilidade_professor_horario_aula foreign key (horario_aula_id) references horario_aula on delete cascade,
     constraint rel_disponibilidade_professor_professor foreign key (professor_id) references professor on delete cascade

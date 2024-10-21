@@ -7,18 +7,15 @@ import java.lang.NoSuchMethodException;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
-import br.com.systempus.systempus.domain.Coordenador;
 import br.com.systempus.systempus.domain.Curso;
 import br.com.systempus.systempus.domain.Modulo;
-import br.com.systempus.systempus.domain.Periodo;
-import br.com.systempus.systempus.domain.enumerador.Modalidade;
-import br.com.systempus.systempus.domain.enumerador.NivelEnsino;
 import br.com.systempus.systempus.error.IllegalStateException;
 import br.com.systempus.systempus.error.NotFoundException;
 import br.com.systempus.systempus.repository.CoordenadorRepository;
@@ -48,8 +45,8 @@ public class CursoService implements ICursoService {
     }
 
     public Curso getOne(Integer id) {
-        Curso resultado = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(Curso.class.getSimpleName().toString(), id));
+        Curso resultado = repository.findById(id).orElseThrow(() -> new NotFoundException(Curso.class.getSimpleName().toString(), id));
+        // System.out.println("\n\n\n\n Teste: " + resultado.getPeriodos() + "\n\n\n\n");
         return resultado;
     }
 

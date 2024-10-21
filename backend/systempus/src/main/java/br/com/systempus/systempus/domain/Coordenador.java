@@ -2,6 +2,8 @@ package br.com.systempus.systempus.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
@@ -14,6 +16,7 @@ import jakarta.persistence.DiscriminatorValue;
 public class Coordenador extends Profissional{
 
     @OneToMany(mappedBy = "coordenador"/* , cascade = CascadeType.ALL*/)
+    // @JsonManagedReference(value = "curso_coordenador")
     private List<Curso> cursos;
 
     public void setCursos(List<Curso> cursos){
